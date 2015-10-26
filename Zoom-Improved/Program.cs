@@ -61,16 +61,20 @@ namespace ZoomImproved
             			{ "fog_enable", 0 }, { "r_farz", 18000 }, { "dota_camera_distance", 1550 }
             			
             		};
-            foreach (var data in list)
-            {
-                var var = Game.GetConsoleVar(data.Key);
-                var.RemoveFlags(ConVarFlags.Cheat);
-                var.SetValue(data.Value);
-            }
-            loaded = true;
-        }
-
-        
-
+            		
+            		foreach (var data in list)
+            		{
+            			var var = Game.GetConsoleVar(data.Key);
+            			var.RemoveFlags(ConVarFlags.Cheat);
+            			var.SetValue(data.Value);
+            		}
+            		
+            		loaded = true;
+			
+		}
+		
+		
 	}
+	
+	
 }
