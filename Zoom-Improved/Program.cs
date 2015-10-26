@@ -39,6 +39,7 @@ namespace ZoomImproved
 					args.Process = false;
 				}
 			}
+			
 		}
 
 		private static bool loaded;
@@ -70,11 +71,7 @@ namespace ZoomImproved
             		}
             		
             		loaded = true;
-			
 		}
 		
-		
 	}
-	
-	
 }
