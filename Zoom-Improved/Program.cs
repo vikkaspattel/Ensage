@@ -44,8 +44,8 @@ namespace ZoomImproved
 		private static bool loaded;
 
 		private static void Game_OnUpdate(EventArgs args)
-        	{
-        		if (!Game.IsInGame)
+		{
+			if (!Game.IsInGame)
         		{
         			loaded = false;
         			return;
@@ -55,10 +55,12 @@ namespace ZoomImproved
             		{
                 	return;
             		}
-            var list = new Dictionary<string, float>
-                           {
-                               { "fog_enable", 0 }, { "r_farz", 18000 }, { "dota_camera_distance", 1550 }
-                           };
+            		
+            		var list = new Dictionary<string, float>
+            		{
+            			{ "fog_enable", 0 }, { "r_farz", 18000 }, { "dota_camera_distance", 1550 }
+            			
+            		};
             foreach (var data in list)
             {
                 var var = Game.GetConsoleVar(data.Key);
