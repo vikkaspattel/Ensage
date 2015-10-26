@@ -7,8 +7,6 @@ namespace ZoomImproved
 {
 	class Program
 	{
-		// TODO: make config and set zoom Enhanced on load
-		// TODO: make key configurable
 		private static readonly uint WM_MOUSEWHEEL = 0x020A;
 
 		private static readonly uint VK_CTRL = 0x11;
@@ -17,7 +15,6 @@ namespace ZoomImproved
 
 		static void Main()
 		{
-
 			ZoomVar.RemoveFlags(ConVarFlags.Cheat);
 			Game.OnWndProc += Game_OnWndProc;
 			Game.OnUpdate += Game_OnUpdate;
@@ -28,20 +25,18 @@ namespace ZoomImproved
             
 			if (args.Msg == WM_MOUSEWHEEL/* && Game.IsInGame*/ )
 			{
-                if (Game.IsKeyDown(VK_CTRL))
+                		if (Game.IsKeyDown(VK_CTRL))
 				{
-					// Get HIWORD(wParam)
+					
 					var delta = (short)((args.WParam >> 16) & 0xFFFF);
-					// GetValue
+				
 					var zoomValue = ZoomVar.GetInt();
 					if (delta < 0)
 						zoomValue += 50;
 					else
 						zoomValue -= 50;
-                    // Set updated value
-                    ZoomVar.SetValue(zoomValue);
-					// Block processed input from game
-					args.Process = false;
+						ZoomVar.SetValue(zoomValue);
+						args.Process = false;
 				}
 			}
 		}
