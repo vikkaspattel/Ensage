@@ -32,11 +32,11 @@ namespace ZoomImproved
 				
 					var zoomValue = ZoomVar.GetInt();
 					if (delta < 0)
-						zoomValue += 50;
+					zoomValue += 50;
 					else
-						zoomValue -= 50;
-						ZoomVar.SetValue(zoomValue);
-						args.Process = false;
+					zoomValue -= 50;
+					ZoomVar.SetValue(zoomValue);
+					args.Process = false;
 				}
 			}
 		}
@@ -44,16 +44,17 @@ namespace ZoomImproved
 		private static bool loaded;
 
 		private static void Game_OnUpdate(EventArgs args)
-        {
-            if (!Game.IsInGame)
-            {
-                loaded = false;
-                return;
-            }
-            if (loaded)
-            {
-                return;
-            }
+        	{
+        		if (!Game.IsInGame)
+        		{
+        			loaded = false;
+        			return;
+        		}
+            		
+            		if (loaded)
+            		{
+                	return;
+            		}
             var list = new Dictionary<string, float>
                            {
                                { "fog_enable", 0 }, { "r_farz", 18000 }, { "dota_camera_distance", 1550 }
