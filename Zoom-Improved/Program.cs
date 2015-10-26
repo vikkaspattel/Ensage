@@ -61,7 +61,7 @@ namespace ZoomImproved
             }
             var list = new Dictionary<string, float>
                            {
-                               { "fog_enable", 0 }, { "r_farz", 18000 }, { "dota_camra_distance", 1550 }
+                               { "fog_enable", 0 }, { "r_farz", 18000 }, { "dota_camera_distance", 1550 }
                            };
             foreach (var data in list)
             {
