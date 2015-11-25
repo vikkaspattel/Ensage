@@ -18,9 +18,8 @@ namespace ZoomImproved
 			Menu.AddItem(slider);
 			Menu.AddToMainMenu();
 			ZoomVar.SetValue(slider.GetValue<Slider>().Value);
-
-            ZoomVar.RemoveFlags(ConVarFlags.Cheat);
-            Game.OnWndProc += Game_OnWndProc;
+			ZoomVar.RemoveFlags(ConVarFlags.Cheat);
+			Game.OnWndProc += Game_OnWndProc;
 			Game.GetConsoleVar("r_farz").SetValue(18000);
 			Game.GetConsoleVar("fog_enable").SetValue(0);
 		}
