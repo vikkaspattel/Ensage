@@ -8,8 +8,8 @@ namespace ZoomImproved
 	{
 		private static readonly Menu Menu = new Menu("zOOm", "zOOm", true);
 		private static readonly uint WM_MOUSEWHEEL = 0x020A;
-	    private static readonly uint VK_CTRL = 0x11;
-        private static readonly ConVar ZoomVar = Game.GetConsoleVar("dota_camera_distance");
+		private static readonly uint VK_CTRL = 0x11;
+		private static readonly ConVar ZoomVar = Game.GetConsoleVar("dota_camera_distance");
   
 		static void Main()
 		{
@@ -42,8 +42,8 @@ namespace ZoomImproved
 						zoomValue += 50;
 					else
 						zoomValue -= 50;
-                    ZoomVar.SetValue(zoomValue);
-					 Menu.Item("zoom").SetValue(new Slider(zoomValue, 1134, 2500));
+					ZoomVar.SetValue(zoomValue);
+					Menu.Item("zoom").SetValue(new Slider(zoomValue, 1134, 2500));
 					args.Process = false;
 				}
 			}
