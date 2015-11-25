@@ -1,77 +1,53 @@
-using System;
-using System.Collections.Generic;
-using System.Windows.Input;
 using Ensage;
+using System.Windows.Input;
+using Ensage.Common.Menu;
 
 namespace ZoomImproved
 {
 	class Program
 	{
+		private static readonly Menu Menu = new Menu("zOOm", "zOOm", true);
 		private static readonly uint WM_MOUSEWHEEL = 0x020A;
-
-		private static readonly uint VK_CTRL = 0x11;
-
-		private static readonly ConVar ZoomVar = Game.GetConsoleVar("dota_camera_distance");
-
+	    private static readonly uint VK_CTRL = 0x11;
+        private static readonly ConVar ZoomVar = Game.GetConsoleVar("dota_camera_distance");
+  
 		static void Main()
 		{
-			ZoomVar.RemoveFlags(ConVarFlags.Cheat);
-			Game.OnWndProc += Game_OnWndProc;
-			Game.OnUpdate += Game_OnUpdate;
-		}
+			var slider = new MenuItem("zoom", "Default zOOm").SetValue(new Slider(1550, 1134, 2500));
+			slider.ValueChanged += Slider_ValueChanged;
+			Menu.AddItem(slider);
+			Menu.AddToMainMenu();
+			ZoomVar.SetValue(slider.GetValue<Slider>().Value);
 
+            ZoomVar.RemoveFlags(ConVarFlags.Cheat);
+            Game.OnWndProc += Game_OnWndProc;
+			Game.GetConsoleVar("r_farz").SetValue(18000);
+			Game.GetConsoleVar("fog_enable").SetValue(0);
+		}
+		
+		private static void Slider_ValueChanged(object sender, OnValueChangeEventArgs e)
+		{
+			ZoomVar.SetValue(e.GetNewValue<Slider>().Value);
+		}
+		
 		private static void Game_OnWndProc(WndEventArgs args)
 		{
             
-			if (args.Msg == WM_MOUSEWHEEL/* && Game.IsInGame*/ )
+			if (args.Msg == WM_MOUSEWHEEL && Game.IsInGame )
 			{
-                		if (Game.IsKeyDown(VK_CTRL))
+                if (Game.IsKeyDown(VK_CTRL))
 				{
-					
 					var delta = (short)((args.WParam >> 16) & 0xFFFF);
-				
 					var zoomValue = ZoomVar.GetInt();
 					if (delta < 0)
-					zoomValue += 50;
+						zoomValue += 50;
 					else
-					zoomValue -= 50;
-					ZoomVar.SetValue(zoomValue);
+						zoomValue -= 50;
+                    ZoomVar.SetValue(zoomValue);
+					 Menu.Item("zoom").SetValue(new Slider(zoomValue, 1134, 2500));
 					args.Process = false;
 				}
 			}
-			
 		}
-
-		private static bool loaded;
-
-		private static void Game_OnUpdate(EventArgs args)
-		{
-			if (!Game.IsInGame)
-        		{
-        			loaded = false;
-        			return;
-        		}
-            		
-            		if (loaded)
-            		{
-                	return;
-            		}
-            		
-            		var list = new Dictionary<string, float>
-            		{
-            			{ "fog_enable", 0 }, { "r_farz", 18000 }, { "dota_camera_distance", 1550 }
-            			
-            		};
-            		
-            		foreach (var data in list)
-            		{
-            			var var = Game.GetConsoleVar(data.Key);
-            			var.RemoveFlags(ConVarFlags.Cheat);
-            			var.SetValue(data.Value);
-            		}
-            		
-            		loaded = true;
-		}
-		
 	}
 }
