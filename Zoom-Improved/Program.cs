@@ -34,7 +34,7 @@ namespace ZoomImproved
             
 			if (args.Msg == WM_MOUSEWHEEL && Game.IsInGame )
 			{
-                if (Game.IsKeyDown(VK_CTRL))
+				if (Game.IsKeyDown(VK_CTRL))
 				{
 					var delta = (short)((args.WParam >> 16) & 0xFFFF);
 					var zoomValue = ZoomVar.GetInt();
