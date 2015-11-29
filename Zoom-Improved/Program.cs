@@ -9,7 +9,6 @@ namespace ZoomImproved
 		private static readonly uint WM_MOUSEWHEEL = 0x020A;
 		private static readonly uint VK_CTRL = 0x11;
 		private static readonly ConVar ZoomVar = Game.GetConsoleVar("dota_camera_distance");
-  
 		static void Main()
 		{
 			var slider = new MenuItem("zoom", "Default zOOm").SetValue(new Slider(1550, 1134, 2500));
@@ -22,12 +21,10 @@ namespace ZoomImproved
 			Game.GetConsoleVar("fog_enable").SetValue(0);
 			Game.OnWndProc += Game_OnWndProc;
 		}
-		
 		private static void Slider_ValueChanged(object sender, OnValueChangeEventArgs e)
 		{
 			ZoomVar.SetValue(e.GetNewValue<Slider>().Value);
 		}
-		
 		private static void Game_OnWndProc(WndEventArgs args)
 		{
 			if (args.Msg == WM_MOUSEWHEEL && Game.IsInGame )
