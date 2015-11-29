@@ -1,5 +1,4 @@
 using Ensage;
-using System.Windows.Input;
 using Ensage.Common.Menu;
 
 namespace ZoomImproved
