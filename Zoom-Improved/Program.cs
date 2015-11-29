@@ -19,9 +19,9 @@ namespace ZoomImproved
 			Menu.AddToMainMenu();
 			ZoomVar.RemoveFlags(ConVarFlags.Cheat);
 			ZoomVar.SetValue(slider.GetValue<Slider>().Value);
-			Game.OnWndProc += Game_OnWndProc;
 			Game.GetConsoleVar("r_farz").SetValue(18000);
 			Game.GetConsoleVar("fog_enable").SetValue(0);
+			Game.OnWndProc += Game_OnWndProc;
 		}
 		
 		private static void Slider_ValueChanged(object sender, OnValueChangeEventArgs e)
