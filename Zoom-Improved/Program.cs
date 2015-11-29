@@ -30,7 +30,6 @@ namespace ZoomImproved
 		
 		private static void Game_OnWndProc(WndEventArgs args)
 		{
-            
 			if (args.Msg == WM_MOUSEWHEEL && Game.IsInGame )
 			{
 				if (Game.IsKeyDown(VK_CTRL))
