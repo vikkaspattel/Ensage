@@ -20,30 +20,13 @@ namespace  ShowMeMore
         private  static Hero _me;
         private  static Player Get _player;
         private  const  string Ver =   "0.8c";
-        private  static Vector2 _screenSizeVector2;
         private  static ScreenSizer _drawHelper;
         private  static  bool _isOpen;
         private  static  bool _leftMouseIsPress;
         private  static  readonly Dictionary <Unit, ParticleEffect> Effects2 = new Dictionary <Unit, ParticleEffect> ();
         private  static  readonly Dictionary <Unit, ParticleEffect> Effects1 = new Dictionary <Unit, ParticleEffect> ();
         // ======================================
-        public  static  bool ShowCooldownOnTopPanel;
-        public  static  bool ShowCooldownOnTopPanelLikeText; // working only with ShowCooldownOnTopPanel
-        public  static  bool ShowHealthOnTopPanel;
-        public  static  bool ShowManaOnTopPanel;
-        public  static  bool OverlayOnlyOnEnemy;
-        public  static  bool ShowGlyph;
-        public  static  bool ShowIllusions;
-        public  static  bool ShowLastHit;
-        public  static  bool ShowManabars;
-        public  static  bool ShowRoshanTimer;
-        public  static  bool ShowBuybackCooldown;
         public  static  bool ShowMeMore;
-        public  static  bool AutoItemsMenu;
-        public  static  bool AutoItemsActive;
-        public  static  bool AutoItemsMidas;
-        public  static  bool AutoItemsPhase;
-        public  static  bool AutoItemsStick;
         ===================================== //
         private  static  readonly ShowMeMoreHelper [] = _showMeMore new ShowMeMoreHelper [5];
         private  static  readonly Dictionary <Unit, ParticleEffect> ShowMeMoreEffect = new Dictionary <Unit, ParticleEffect> ();
@@ -51,12 +34,6 @@ namespace  ShowMeMore
         private  static  readonly List <Unit> InSystem = new List <Unit> ();
         private  static Vector3 _arrowS;
         ===================================== //
-        // static readonly InitHelper SaveLoadSysHelper = new InitHelper (Game.AppDataPath + "\\ jOverlay.ini");
-        ===================================== //
-        private  static Single _deathTime;
-        private  static  double _roshanMinutes;
-        private  static  double _roshanSeconds;
-        private  static  bool _roshIsAlive;
         ===================================== //
         private  static  readonly Font [] FontArray = new Font [21];
         private  static Line _line;
@@ -78,12 +55,6 @@ namespace  ShowMeMore
             Game.OnUpdate + = Game_OnUpdate;
             = _loaded false;
             Drawing.OnDraw + = Drawing_OnDraw;
-            = ShowCooldownOnTopPanel true;
-            = ShowHealthOnTopPanel true;
-            = ShowManaOnTopPanel true;
-            = ShowCooldownOnTopPanelLikeText true;
-            = ShowRoshanTimer true;
-            = ShowBuybackCooldown true;
             
             #region Init font & line
 
@@ -138,71 +109,13 @@ namespace  ShowMeMore
 
             #region Save / load
             / *
-            try
-            {
-                ShowHealthOnTopPanel =
-                    Convert.ToBoolean (SaveLoadSysHelper.IniReadValue ("Booleans", "Show Health on top panel")); //
-                ShowManaOnTopPanel =
-                    Convert.ToBoolean (SaveLoadSysHelper.IniReadValue ("Booleans", "Show mana on top panel"));
-                ShowCooldownOnTopPanel =
-                    Convert.ToBoolean (SaveLoadSysHelper.IniReadValue ("Booleans", "Show Cooldown on top panel")); //
-                ShowCooldownOnTopPanelLikeText =
-                    Convert.ToBoolean (SaveLoadSysHelper.IniReadValue ("Booleans", "Show Cooldown on top panel (numbers)"));
-                    //
-                OverlayOnlyOnEnemy =
-                    Convert.ToBoolean (SaveLoadSysHelper.IniReadValue ("Booleans", "Overlay only on enemy")); //
-                ShowGlyph = Convert.ToBoolean (SaveLoadSysHelper.IniReadValue ("Booleans", "Show glyph cd")); //
-                ShowIllusions = Convert.ToBoolean (SaveLoadSysHelper.IniReadValue ("Booleans", "Show Illusions"));
-                ShowLastHit = Convert.ToBoolean (SaveLoadSysHelper.IniReadValue ("Booleans", "Show LastHit / Deny"));
-                ShowManabars = Convert.ToBoolean (SaveLoadSysHelper.IniReadValue ("Booleans", "Show manabars"));
-                ShowRoshanTimer = Convert.ToBoolean (SaveLoadSysHelper.IniReadValue ("Booleans", "Show roshan timer"));
-                ShowBuybackCooldown = Convert.ToBoolean (SaveLoadSysHelper.IniReadValue ("Booleans", "Show Buyback cooldown"));
-                AutoItemsActive = Convert.ToBoolean (SaveLoadSysHelper.IniReadValue ("Booleans", "AutoItems Active"));
-                AutoItemsPhase = Convert.ToBoolean (SaveLoadSysHelper.IniReadValue ("Booleans", "Auto use phase boots"));
-                AutoItemsMidas = Convert.ToBoolean (SaveLoadSysHelper.IniReadValue ("Booleans", "Auto use midas"));
-                AutoItemsStick = Convert.ToBoolean (SaveLoadSysHelper.IniReadValue ("Booleans", "Auto use stick"));
-            }
-            catch
-            {
-                SaveLoadSysHelper.IniWriteValue ("Booleans", "Show health on top panel", true.ToString ());
-                SaveLoadSysHelper.IniWriteValue ("Booleans", "Show mana on top panel", true.ToString ());
-                SaveLoadSysHelper.IniWriteValue ("Booleans", "Show cooldown on top panel", true.ToString ());
-                SaveLoadSysHelper.IniWriteValue ("Booleans", "Show cooldown on top panel (numbers)", true.ToString ());
-                SaveLoadSysHelper.IniWriteValue ("Booleans", "Overlay only on enemy", false.ToString ());
-                SaveLoadSysHelper.IniWriteValue ("Booleans", "Show glyph cd", true.ToString ());
-                SaveLoadSysHelper.IniWriteValue ("Booleans", "Show Illusions", true.ToString ());
-                SaveLoadSysHelper.IniWriteValue ("Booleans", "Show LastHit / Deny", true.ToString ());
-                SaveLoadSysHelper.IniWriteValue ("Booleans", "Show manabars", true.ToString ());
-                SaveLoadSysHelper.IniWriteValue ("Booleans", "Show roshan timer", true.ToString ());
-                SaveLoadSysHelper.IniWriteValue ("Booleans", "Show Buyback cooldown", true.ToString ());
-                SaveLoadSysHelper.IniWriteValue ("Booleans", "AutoItems Active", true.ToString ());
-                SaveLoadSysHelper.IniWriteValue ("Booleans", "Auto use phase boots", true.ToString ());
-                SaveLoadSysHelper.IniWriteValue ("Booleans", "Auto use midas", true.ToString ());
-                SaveLoadSysHelper.IniWriteValue ("Booleans", "Auto use stick", true.ToString ());
-                Console.Beep (1000, 100);
-                Console.Beep (1000, 100);
-                Console.Beep (1000, 100);
-            }
-            * /
+            
             #endregion
             
         }
 
 
-        static  void  Game_OnGameEvent (FireEventEventArgs  args)
-        {
-            if (args.GameEvent.Name == "dota_roshan_kill")
-            {
-                // PrintError ("roshan kill");
-                // Thread roshanThread = new Thread ();
-                _deathTime = Game.GameTime;
-                = _roshIsAlive false;
-                // RoshanMinutes = 0;
-                // RoshanSeconds = 0;
-                // DeathTime = 0;
-            }
-        }
-        #endregion
+      
         #region!
 
         private  static  void  Game_OnWndProc (WndEventArgs  args)
