@@ -11,7 +11,7 @@ using SharpDX.Direct3D9;
 // ReSharper disable EmptyGeneralCatchClause
 // ReSharper disable CompareOfFloatsByEqualityOperator
 
-namespace  Overlay_information
+namespace  ShowMeMore
 {
     internal  class  Program
     {
