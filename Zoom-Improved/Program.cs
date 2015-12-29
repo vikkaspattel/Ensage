@@ -11,7 +11,7 @@ namespace ZoomImproved
 		private static readonly ConVar ZoomVar = Game.GetConsoleVar("dota_camera_distance");
 		static void Main()
 		{
-			var slider = new MenuItem("zoom", "Default zOOm").SetValue(new Slider(1550, 1134, 2500));
+			var slider = new MenuItem("distance", "Default zOOm").SetValue(new Slider(1550, 1134, 2500));
 			slider.ValueChanged += Slider_ValueChanged;
 			Menu.AddItem(slider);
 			Menu.AddToMainMenu();
@@ -38,7 +38,7 @@ namespace ZoomImproved
 					else
 						zoomValue -= 50;
 					ZoomVar.SetValue(zoomValue);
-					Menu.Item("zoom").SetValue(new Slider(zoomValue, 1134, 2500));
+					Menu.Item("distance").SetValue(new Slider(zoomValue, 1134, 2500));
 					args.Process = false;
 				}
 			}
