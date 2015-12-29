@@ -11,7 +11,7 @@ namespace ZoomImproved
 		
 		static void Main()
 		{
-			var slider = new MenuItem("distance", "Distance Value").SetValue(new Slider(1550, 1134, 3000));
+			var slider = new MenuItem("distance", "Distance Value").SetValue(new Slider(1550, 1134, 2500));
 			slider.ValueChanged += Slider_ValueChanged;
 			Menu.AddItem(slider);
 			Menu.AddToMainMenu();
@@ -39,7 +39,7 @@ namespace ZoomImproved
 				else
 					zoomValue -= 50;
 				ZoomVar.SetValue(zoomValue);
-				Menu.Item("distance").SetValue(new Slider(zoomValue, 1134, 3000));
+				Menu.Item("distance").SetValue(new Slider(zoomValue, 1134, 2500));
 				args.Process = false;
 			}
 		}
