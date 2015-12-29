@@ -8,7 +8,6 @@ namespace ZoomImproved
 		private static readonly Menu Menu = new Menu("zOOm", "zOOm", true);
 		private static readonly uint WM_MOUSEWHEEL = 0x020A;
 		private static readonly ConVar ZoomVar = Game.GetConsoleVar("dota_camera_distance");
-		
 		static void Main()
 		{
 			var slider = new MenuItem("distance", "Distance Value").SetValue(new Slider(1550, 1134, 2500));
@@ -22,12 +21,10 @@ namespace ZoomImproved
 			Game.GetConsoleVar("dota_camera_disable_zoom").SetValue(1);
 			Game.OnWndProc += Game_OnWndProc;
 		}
-		
 		private static void Slider_ValueChanged(object sender, OnValueChangeEventArgs e)
 		{
 			ZoomVar.SetValue(e.GetNewValue<Slider>().Value);
 		}
-
 		private static void Game_OnWndProc(WndEventArgs args)
 		{
 			if (args.Msg == WM_MOUSEWHEEL && Game.IsInGame )
