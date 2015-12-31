@@ -39,12 +39,9 @@ namespace Axescript
 				target = GetLowHpHeroInDistance(me, blinkRadius);
 				if (Menu.Item("blink").GetValue<bool>())
 				{
-					if (target != null && me.Health > 400 && blink != null && blink.CanBeCasted() && Utils.SleepCheck("blink"))
+					if (!useAbility(blink, "blink", target, true, me))
 					{
-						if (!useAbility(blink, "blink", target, true, me))
-						{
-							return;
-						}
+						return;
 					}
 				}
 				target = GetLowHpHeroInDistance(me, 400);
