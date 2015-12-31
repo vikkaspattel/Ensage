@@ -104,11 +104,11 @@ namespace Axescript
 			int[] ultDamage;
 			if (aghanim != null)
 			{
-				ultDamage = new int[3] { 300, 425, 550 };
+				ultDamage = new int[3] { 297, 422, 547 };
 			}
 			else
 			{
-				ultDamage = new int[3] { 250, 325, 400 };
+				ultDamage = new int[3] { 247, 322, 397 };
 			}
 			var ultLevel = me.Spellbook.SpellR.Level;
 			var damage = ultDamage[ultLevel - 1];
