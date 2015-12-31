@@ -39,9 +39,12 @@ namespace Axescript
 				target = GetLowHpHeroInDistance(me, blinkRadius);
 				if (Menu.Item("blink").GetValue<bool>())
 				{
-					if (!useAbility(blink, "blink", target, true, me))
+					if (target != null && blink != null && blink.CanBeCasted() && Utils.SleepCheck("blink"))
 					{
-						return;
+						if (!useAbility(blink, "blink", target, true, me))
+						{
+							return;
+						}
 					}
 				}
 				target = GetLowHpHeroInDistance(me, 400);
@@ -105,7 +108,7 @@ namespace Axescript
 			}
 			else
 			{
-				ultDamage = new int[3] { 247, 322, 397 };
+				ultDamage = new int[3] { 247, 322, 395 };
 			}
 			var ultLevel = me.Spellbook.SpellR.Level;
 			var damage = ultDamage[ultLevel - 1];
