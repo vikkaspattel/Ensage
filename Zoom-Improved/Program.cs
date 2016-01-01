@@ -13,12 +13,6 @@ namespace ZoomImproved
 		private static readonly ConVar ZoomVar = Game.GetConsoleVar("dota_camera_distance");
 		static void Main()
 		{
-			var slider = new MenuItem("distance", "Distance Value").SetValue(new Slider(1584, 1134, 2484));
-			slider.ValueChanged += Slider_ValueChanged;
-			Menu.AddItem(slider);
-			Menu.AddToMainMenu();
-			ZoomVar.RemoveFlags(ConVarFlags.Cheat);
-			ZoomVar.SetValue(slider.GetValue<Slider>().Value);
 			Game.OnWndProc += Game_OnWndProc;
 			Game.OnUpdate += Game_OnUpdate;
 		}
@@ -34,16 +28,15 @@ namespace ZoomImproved
 			{
 				return;
 			}
-			var list = new Dictionary<string, float>
-			{
-				{ "dota_camera_disable_zoom", 1 }, { "r_farz", 18000 }, { "fog_enable", 0 }, { "dota_camera_distance", 1584 }
-			};
-			foreach (var data in list)
-			{
-				var var = Game.GetConsoleVar(data.Key);
-				var.RemoveFlags(ConVarFlags.Cheat);
-				var.SetValue(data.Value);
-			}
+			var slider = new MenuItem("distance", "Camera Distance").SetValue(new Slider(1500, 1134, 2500));
+			slider.ValueChanged += Slider_ValueChanged;
+			Menu.AddItem(slider);
+			Menu.AddToMainMenu();
+			ZoomVar.RemoveFlags(ConVarFlags.Cheat);
+			ZoomVar.SetValue(slider.GetValue<Slider>().Value);
+			Game.GetConsoleVar("r_farz").SetValue(18000);
+			Game.GetConsoleVar("fog_enable").SetValue(0);
+			Game.GetConsoleVar("dota_camera_disable_zoom").SetValue(1);
 			loaded = true;
 		}
 		private static void Slider_ValueChanged(object sender, OnValueChangeEventArgs e)
@@ -56,15 +49,15 @@ namespace ZoomImproved
 			{
 				var delta = (short)((args.WParam >> 16) & 0xFFFF);
 				var zoomValue = ZoomVar.GetInt();
-				if (delta < 0 && zoomValue < 2435)
-					
+				if (delta < 0)
 					zoomValue += 50;
-					
-				if (delta > 0 && zoomValue > 1183)
+				if (delta > 0) 
 					zoomValue -= 50;
+				if (zoomValue < 1134)
+					zoomValue = 1134;
 				ZoomVar.SetValue(zoomValue);
-				Menu.Item("distance").SetValue(new Slider(zoomValue, 1134, 2484));
-				args.Process = true;
+				Menu.Item("distance").SetValue(new Slider(zoomValue, 1134, 2500));
+				args.Process = false;
 			}
 		}
 	}
