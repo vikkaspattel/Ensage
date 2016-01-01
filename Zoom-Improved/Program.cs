@@ -45,7 +45,7 @@ namespace ZoomImproved
 		}
 		private static void Game_OnWndProc(WndEventArgs args)
 		{
-		if (args.Msg == WM_MOUSEWHEEL && Game.IsInGame )
+			if (args.Msg == WM_MOUSEWHEEL && Game.IsInGame )
 			{
 				var delta = (short)((args.WParam >> 16) & 0xFFFF);
 				var zoomValue = ZoomVar.GetInt();
