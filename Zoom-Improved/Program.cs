@@ -28,7 +28,7 @@ namespace ZoomImproved
 			{
 				return;
 			}
-			var slider = new MenuItem("distance", "Camera Distance").SetValue(new Slider(1500, 1134, 2500));
+			var slider = new MenuItem("distance", "Camera Distance").SetValue(new Slider(1550, 1134, 2500));
 			slider.ValueChanged += Slider_ValueChanged;
 			Menu.AddItem(slider);
 			Menu.AddToMainMenu();
