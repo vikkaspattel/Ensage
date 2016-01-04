@@ -37,7 +37,7 @@ namespace ZoomImproved
 			ZoomVar.SetValue(slider.GetValue<Slider>().Value);
 			Game.GetConsoleVar("r_farz").SetValue(18000);
 			Game.GetConsoleVar("fog_enable").SetValue(0);
-			Game.GetConsoleVar("dota_camera_disable_zoom").SetValue(1);
+			Game.GetConsoleVar("dota_camera_disable_zoom").SetValue(0);
 			loaded = true;
 		}
 		private static void Slider_ValueChanged(object sender, OnValueChangeEventArgs e)
