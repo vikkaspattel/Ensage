@@ -13,7 +13,7 @@ namespace TinkerMadness
 	{
 		private static readonly Menu Menu = new Menu("Tinker Madness", "tinkermadness", true);
         private static Ability Laser, Rocket, ReArm;
-        private static Item Blink, Dagon, Hex, Soulring, Ethereal, Veil, Orchid, Shiva;
+        private static Item Blink, Dagon, Hex, Soulring, Ethereal, Veil, Orchid, Shiva, Glimmer;
         private static Hero me;
         private static Hero target;
         private static bool toggle = true;
@@ -23,7 +23,8 @@ namespace TinkerMadness
 		
 		static void Main(string[] args)
 		{
-			Menu.AddItem(new MenuItem("script", "Enable Script").SetValue(new KeyBind('L', KeyBindType.Toggle)));
+			Menu.AddItem(new MenuItem("script", "Enable Script?").SetValue(new KeyBind('L', KeyBindType.Press)));
+			Menu.AddItem(new MenuItem("safeglimmer", "Travel with Glimmer").SetValue(true));
 			Menu.AddItem(new MenuItem("go", "Go Tinker").SetValue(new KeyBind('G', KeyBindType.Press)));
 			Menu.AddToMainMenu();
 			Game.OnUpdate += Game_OnUpdate;
@@ -49,6 +50,7 @@ namespace TinkerMadness
 			Veil = me.FindItem("item_veil_of_discord");
 			Orchid = me.FindItem("item_orchid");
 			Shiva = me.FindItem("item_shivas_guard");
+			Glimmer = me.FindItem("item_glimmer_cape");
 			// Manacost calculations
 			var manaForCombo = Laser.ManaCost + Rocket.ManaCost;
 			if (Dagon != null && Dagon.CanBeCasted())
@@ -61,13 +63,26 @@ namespace TinkerMadness
 				manaForCombo += 50;
 			if (Shiva != null && Shiva.CanBeCasted())
 				manaForCombo += 100;
+			if (Glimmer != null && Glimmer.CanBeCasted())
+				manaForCombo += 110;
+			// Glimmer Use
+			if (Menu.Item("script").GetValue<KeyBind>().Active &&  Menu.Item("safeglimmer").GetValue<bool>())
+				{
+					if (Glimmer !=null && me.IsChanneling() && Glimmer.CanBeCasted() && Utils.SleepCheck("Glimmer") && !ReArm.IsChanneling)
+					{
+						Glimmer.UseAbility(me);
+						Utils.Sleep(100 + Game.Ping, "Glimmer");
+					}
+				}
 			// Main combo
 			if (active && toggle)
 			{
-				if ((target == null || !target.IsVisible) && !me.IsChanneling())
-					me.Move(Game.MousePosition);
 				target = me.ClosestToMouseTarget(1000);
-				if (target != null && target.IsAlive && !target.IsIllusion && !target.IsMagicImmune() && Utils.SleepCheck("refresh") && !ReArm.IsChanneling && (me.Distance2D(target) < 2000))
+				if ((target == null || !target.IsVisible) && !me.IsChanneling())
+				{
+					me.Move(Game.MousePosition);
+				}
+				if (target != null && target.IsAlive && !target.IsIllusion && !target.IsMagicImmune() && Utils.SleepCheck("ReArm") && !ReArm.IsChanneling && (me.Distance2D(target) < 2000))
 				{
 					if (Soulring != null && Soulring.CanBeCasted() && me.Health > 300 && Utils.SleepCheck("soulring"))
 					{
@@ -126,11 +141,11 @@ namespace TinkerMadness
 						Utils.Sleep(150 + Game.Ping, "laser");
 						Utils.ChainStun(me, 150 + Game.Ping, null, false);
 					}
-					else if (ReArm != null && ReArm.CanBeCasted() && me.Mana > 200 && Utils.SleepCheck("refresh") && !ReArm.IsChanneling && nothingCanCast())
+					else if (ReArm != null && ReArm.CanBeCasted() && me.Mana > 200 && Utils.SleepCheck("ReArm") && !ReArm.IsChanneling && nothingCanCast())
 					{
 						ReArm.UseAbility();
 						Utils.ChainStun(me, (ReArm.ChannelTime * 1000) + Game.Ping + 400, null, false);
-						Utils.Sleep(700 + Game.Ping, "refresh");
+						Utils.Sleep(700 + Game.Ping, "ReArm");
 					}
 					else if (!me.IsChanneling() && !ReArm.IsChanneling && nothingCanCast())
 					{
