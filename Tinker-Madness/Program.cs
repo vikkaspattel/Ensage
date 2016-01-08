@@ -13,14 +13,14 @@ namespace TinkerMadness
 	{
 		private static readonly Menu Menu = new Menu("Tinker Madness", "tinkermadness", true, "npc_dota_hero_tinker", true);
 		private static readonly Menu SubMenu = new Menu("More", "more");
-        private static Ability Laser, Rocket, ReArm;
-        private static Item Blink, Dagon, Hex, Soulring, Ethereal, Veil, Orchid, Shiva, Glimmer;
-        private static Hero me;
-        private static Hero target;
-        private static bool toggle = true;
-        private static bool active;
-        private static bool blinkToggle = true;
-        private static int maximumDistance = 1500;
+		private static Ability Laser, Rocket, ReArm;
+		private static Item Blink, Dagon, Hex, Soulring, Ethereal, Veil, Orchid, Shiva, Glimmer;
+		private static Hero me;
+		private static Hero target;
+		private static bool toggle = true;
+		private static bool active;
+		private static bool blinkToggle = true;
+		private static int maximumDistance = 1500;
 		
 		static void Main(string[] args)
 		{
