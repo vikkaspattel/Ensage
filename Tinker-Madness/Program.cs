@@ -27,7 +27,7 @@ namespace TinkerMadness
 			Menu.AddItem(new MenuItem("go", "Go Tinker").SetValue(new KeyBind('G', KeyBindType.Press)).SetTooltip("Hoding Key will keep Tinker Madness On"));
 			Menu.AddSubMenu(SubMenu);
 			SubMenu.AddItem(new MenuItem("safeglimmer", "Glimmer Travel").SetValue(true).SetTooltip("Auto use Glimmer Cape if Tinker uses boots of Travel"));
-			Menu.AddItem(new MenuItem("safeblink", "Instant Blink").SetValue(new KeyBind('F', KeyBindType.Press)).SetTooltip("Hold the Key and After Travel Tinker will instant Blink on your Mouse Position"));
+			Menu.AddItem(new MenuItem("safeblink", "Instant Blink").SetValue(new KeyBind('F', KeyBindType.Press)).SetTooltip("Hold HotKey and After Finishing Chenneling Tinker will instant Blink on your Mouse Position"));
 			Menu.AddToMainMenu();
 			Game.OnUpdate += Game_OnUpdate;
 			Game.OnWndProc += Game_OnWndProc;
@@ -87,7 +87,7 @@ namespace TinkerMadness
 				{
 					me.Move(Game.MousePosition);
 				}
-				if (target != null && target.IsAlive && !target.IsIllusion && !target.IsMagicImmune() && Utils.SleepCheck("ReArm") && !ReArm.IsChanneling && (me.Distance2D(target) < 2000))
+				if (target != null && target.IsAlive && !target.IsIllusion && !target.IsMagicImmune() && Utils.SleepCheck("ReArm") && !me.IsChanneling() && (me.Distance2D(target) < 3000))
 				{
 					if (Soulring != null && Soulring.CanBeCasted() && me.Health > 300 && Utils.SleepCheck("soulring"))
 					{
