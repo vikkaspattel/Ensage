@@ -11,7 +11,8 @@ namespace TinkerMadness
 {
 	internal class Program
 	{
-		private static readonly Menu Menu = new Menu("Tinker Madness", "tinkermadness", true);
+		private static readonly Menu Menu = new Menu("Tinker Madness", "tinkermadness", true, "npc_dota_hero_tinker", true);
+		private static readonly Menu SubMenu = new Menu("More", "more");
         private static Ability Laser, Rocket, ReArm;
         private static Item Blink, Dagon, Hex, Soulring, Ethereal, Veil, Orchid, Shiva, Glimmer;
         private static Hero me;
@@ -23,9 +24,10 @@ namespace TinkerMadness
 		
 		static void Main(string[] args)
 		{
-			Menu.AddItem(new MenuItem("script", "Enable Script?").SetValue(new KeyBind('L', KeyBindType.Press)));
-			Menu.AddItem(new MenuItem("safeglimmer", "Travel with Glimmer").SetValue(true));
-			Menu.AddItem(new MenuItem("go", "Go Tinker").SetValue(new KeyBind('G', KeyBindType.Press)));
+			Menu.AddItem(new MenuItem("go", "Go Tinker").SetValue(new KeyBind('G', KeyBindType.Press)).SetTooltip("Hoding Key will keep Tinker Madness On"));
+			Menu.AddSubMenu(SubMenu);
+			SubMenu.AddItem(new MenuItem("safeglimmer", "Glimmer Travel").SetValue(true).SetTooltip("Auto use Glimmer Cape if Tinker uses boots of Travel"));
+			Menu.AddItem(new MenuItem("safeblink", "Instant Blink").SetValue(new KeyBind('F', KeyBindType.Press)).SetTooltip("Hold the Key and After Travel Tinker will instant Blink on your Mouse Position"));
 			Menu.AddToMainMenu();
 			Game.OnUpdate += Game_OnUpdate;
 			Game.OnWndProc += Game_OnWndProc;
@@ -65,13 +67,23 @@ namespace TinkerMadness
 				manaForCombo += 100;
 			if (Glimmer != null && Glimmer.CanBeCasted())
 				manaForCombo += 110;
-			// Glimmer Use
-			if (Menu.Item("script").GetValue<KeyBind>().Active &&  Menu.Item("safeglimmer").GetValue<bool>())
+			// Glimmer Use on Boots of Travel
+			if (SubMenu.Item("safeglimmer").GetValue<bool>())
 				{
 					if (Glimmer !=null && me.IsChanneling() && Glimmer.CanBeCasted() && Utils.SleepCheck("Glimmer") && !ReArm.IsChanneling)
 					{
 						Glimmer.UseAbility(me);
 						Utils.Sleep(100 + Game.Ping, "Glimmer");
+					}
+				}
+				
+			// Blink Use to Hide After Travel
+			if (Menu.Item("safeblink").GetValue<KeyBind>().Active)
+				{
+					if (Blink !=null && !me.IsChanneling() && Utils.SleepCheck("Blink"))
+					{
+						Blink.UseAbility(Game.MousePosition);
+						Utils.Sleep(100 + Game.Ping, "Blink");
 					}
 				}
 			// Main combo
@@ -173,7 +185,7 @@ namespace TinkerMadness
 		{
 			if (!Game.IsChatOpen)
 			{
-				if (Menu.Item("go").GetValue<KeyBind>().Active && Menu.Item("script").GetValue<KeyBind>().Active)
+				if (Menu.Item("go").GetValue<KeyBind>().Active)
 				{
 					active = true;
 				}
