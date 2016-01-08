@@ -68,24 +68,17 @@ namespace TinkerMadness
 			if (Glimmer != null && Glimmer.CanBeCasted())
 				manaForCombo += 110;
 			// Glimmer Use on Boots of Travel
-			if (SubMenu.Item("safeglimmer").GetValue<bool>())
+			if (Glimmer !=null && me.IsChanneling() && Glimmer.CanBeCasted() && Utils.SleepCheck("Glimmer") && !ReArm.IsChanneling && (SubMenu.Item("safeglimmer").GetValue<bool>()))
 				{
-					if (Glimmer !=null && me.IsChanneling() && Glimmer.CanBeCasted() && Utils.SleepCheck("Glimmer") && !ReArm.IsChanneling)
-					{
-						Glimmer.UseAbility(me);
-						Utils.Sleep(100 + Game.Ping, "Glimmer");
-					}
+					Glimmer.UseAbility(me);
+					Utils.Sleep(100 + Game.Ping, "Glimmer");
 				}
-				
 			// Blink Use to Hide After Travel
-			if (Menu.Item("safeblink").GetValue<KeyBind>().Active)
-				{
-					if (Blink !=null && !me.IsChanneling() && Utils.SleepCheck("Blink"))
-					{
-						Blink.UseAbility(Game.MousePosition);
-						Utils.Sleep(100 + Game.Ping, "Blink");
-					}
-				}
+			if (Blink !=null && !me.IsChanneling() && Blink.CanBeCasted() && Utils.SleepCheck("Blink") && (Menu.Item("safeblink").GetValue<KeyBind>().Active))
+			{
+				Blink.UseAbility(Game.MousePosition);
+				Utils.Sleep(1000 + Game.Ping, "Blink");
+			}
 			// Main combo
 			if (active && toggle)
 			{
