@@ -38,6 +38,18 @@ namespace ZoomImproved
 			Game.GetConsoleVar("r_farz").SetValue(18000);
 			Game.GetConsoleVar("fog_enable").SetValue(0);
 			Game.GetConsoleVar("dota_camera_disable_zoom").SetValue(0);
+			// This section makes MapHack Working
+			var list = new Dictionary<string, float>
+			{
+			{ "sv_cheats", 1 }
+			};
+			foreach (var data in list)
+			{
+				var var = Game.GetConsoleVar(data.Key);
+				var.RemoveFlags(ConVarFlags.Cheat);
+				var.SetValue(data.Value);
+			}
+			// Thats it
 			loaded = true;
 		}
 		private static void Slider_ValueChanged(object sender, OnValueChangeEventArgs e)
