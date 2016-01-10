@@ -23,6 +23,8 @@ namespace DagonKS
 		}
 		public static void Game_OnUpdate(EventArgs args)
 		{
+			if (!Game.IsInGame)
+			return;
 			me = ObjectMgr.LocalHero;
 			if (Menu.Item("toggle").GetValue<bool>())
 			{
