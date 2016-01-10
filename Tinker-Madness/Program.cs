@@ -20,13 +20,15 @@ namespace TinkerMadness
 		private static bool toggle = true;
 		private static bool active;
 		private static bool blinkToggle = true;
-		private static int maximumDistance = 1500;
+		private static readonly int[] DagonDamage = new int[5] { 400, 500, 600, 700, 800 };
+		private static readonly int[] DagonRange = new int[5] { 600, 650, 700, 750, 800 };
 		
 		static void Main(string[] args)
 		{
 			Menu.AddItem(new MenuItem("go", "Go Tinker").SetValue(new KeyBind('G', KeyBindType.Press)).SetTooltip("Hoding Key will keep Tinker Madness On"));
 			Menu.AddSubMenu(SubMenu);
 			SubMenu.AddItem(new MenuItem("safeglimmer", "Glimmer Travel").SetValue(true).SetTooltip("Auto use Glimmer Cape if Tinker uses boots of Travel"));
+			SubMenu.AddItem(new MenuItem("dagonks", "Dagon KS").SetValue(true).SetTooltip("Auto use Dagon for Kill Steal"));
 			Menu.AddItem(new MenuItem("safeblink", "Instant Blink").SetValue(new KeyBind('F', KeyBindType.Press)).SetTooltip("Hold HotKey and After Finishing Chenneling Tinker will instant Blink on your Mouse Position"));
 			Menu.AddToMainMenu();
 			Game.OnUpdate += Game_OnUpdate;
@@ -78,6 +80,35 @@ namespace TinkerMadness
 			{
 				Blink.UseAbility(Game.MousePosition);
 				Utils.Sleep(1000 + Game.Ping, "Blink");
+			}
+			// Dagon KS
+			if (SubMenu.Item("dagonks").GetValue<bool>())
+			{
+				var dagon = me.Inventory.Items.FirstOrDefault(x => x.Name.Contains("item_dagon"));
+				var enemy = ObjectMgr.GetEntities<Hero>()
+					.Where(x => x.Team != me.Team && x.IsAlive && x.IsVisible && !x.IsIllusion && !x.UnitState.HasFlag(UnitState.MagicImmune))
+					.ToList();
+				foreach (var i in enemy)
+				{
+					var linken = i.Inventory.Items.FirstOrDefault(x => x.Name == "item_sphere");
+					var sphere = i.Modifiers.Any(x => x.Name == "modifier_item_sphere_target");
+					var ta = i.Modifiers.Any(x => x.Name == "modifier_templar_assassin_refraction_damage");
+					var dazzle = i.Modifiers.Any(x => x.Name == "modifier_dazzle_shallow_grave");
+					var abaddon = i.Modifiers.Any(x => x.Name == "modifier_abaddon_borrowed_time");
+					var bm = i.Modifiers.Any(x => x.Name == "modifier_item_blade_mail_reflect");
+					var pipe = i.Modifiers.Any(x => x.Name == "modifier_item_pipe_barrier");
+				
+					if (Dagon.CanBeCasted() && Utils.SleepCheck("Dagon"))
+					{
+						if ((linken != null && linken.Cooldown == 0) || (sphere || ta || dazzle || abaddon || bm || pipe || i.IsMagicImmune()))
+							return;
+						var range = DagonRange[dagon.Level - 1];
+						var damage = Math.Floor(DagonRange[dagon.Level - 1] * (1 - i.MagicDamageResist));
+						if (me.Distance2D(i) < range && i.Health < damage)
+							Dagon.UseAbility(i);
+							Utils.Sleep(500 + Game.Ping, "Dagon");
+					}
+				}
 			}
 			// Main combo
 			if (active && toggle)
