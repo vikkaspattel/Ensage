@@ -135,7 +135,7 @@ namespace TinkerMadness
 			if (active && toggle)
 			{
 				target = me.ClosestToMouseTarget(1000);
-				if ((target == null || !target.IsVisible) && !me.IsChanneling())
+				if ((target == null || !target.IsVisible) && !me.IsChanneling() && !ReArm.IsChanneling && Utils.SleepCheck("ReArm"))
 				{
 					me.Move(Game.MousePosition);
 				}
