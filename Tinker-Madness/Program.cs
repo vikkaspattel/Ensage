@@ -135,7 +135,7 @@ namespace TinkerMadness
 			if (active && toggle)
 			{
 				target = me.ClosestToMouseTarget(1000);
-				if ((target == null || !target.IsVisible) && !me.IsChanneling() && !ReArm.IsChanneling && Utils.SleepCheck("ReArm"))
+				if ((target == null || !target.IsVisible) && !me.IsChanneling() && !ReArm.IsChanneling)
 				{
 					me.Move(Game.MousePosition);
 				}
@@ -204,7 +204,7 @@ namespace TinkerMadness
 						Utils.ChainStun(me, (ReArm.ChannelTime * 1000) + Game.Ping + 400, null, false);
 						Utils.Sleep(700 + Game.Ping, "ReArm");
 					}
-					else if (!me.IsChanneling() && !ReArm.IsChanneling && nothingCanCast() && Utils.SleepCheck("ReArm"))
+					else if (!me.IsChanneling() && !ReArm.IsChanneling && nothingCanCast())
 					{
 						me.Attack(target);
 					}
