@@ -22,13 +22,15 @@ namespace TinkerMadness
 		private static bool blinkToggle = true;
 		private static readonly int[] DagonDamage = new int[5] { 400, 500, 600, 700, 800 };
 		private static readonly int[] DagonRange = new int[5] { 600, 650, 700, 750, 800 };
+		private static readonly int[] LaserDamage = new int[4] { 80, 160, 240, 320 };
+		private static readonly int[] RocketDamage = new int[4] { 125, 200, 275, 350 };
 		
 		static void Main(string[] args)
 		{
 			Menu.AddItem(new MenuItem("go", "Go Tinker").SetValue(new KeyBind('G', KeyBindType.Press)).SetTooltip("Hoding Key will keep Tinker Madness On"));
 			Menu.AddSubMenu(SubMenu);
 			SubMenu.AddItem(new MenuItem("safeglimmer", "Glimmer Travel").SetValue(true).SetTooltip("Auto use Glimmer Cape if Tinker uses boots of Travel"));
-			SubMenu.AddItem(new MenuItem("dagonks", "Dagon KS").SetValue(true).SetTooltip("Auto use Dagon for Kill Steal"));
+			SubMenu.AddItem(new MenuItem("autoks", "Auto KS").SetValue(true).SetTooltip("Auto use Dagon, Laser or rocket for Kill Steal"));
 			Menu.AddItem(new MenuItem("safeblink", "Instant Blink").SetValue(new KeyBind('F', KeyBindType.Press)).SetTooltip("Hold HotKey and After Finishing Chenneling Tinker will instant Blink on your Mouse Position"));
 			Menu.AddToMainMenu();
 			Game.OnUpdate += Game_OnUpdate;
@@ -37,7 +39,7 @@ namespace TinkerMadness
 		public static void Game_OnUpdate(EventArgs args)
 		{
 			me = ObjectMgr.LocalHero;
-			if (me == null || !Game.IsInGame || me.ClassID != ClassID.CDOTA_Unit_Hero_Tinker)
+			if (me == null || !Game.IsInGame)
 			{
 				return;
 			}
@@ -81,10 +83,10 @@ namespace TinkerMadness
 				Blink.UseAbility(Game.MousePosition);
 				Utils.Sleep(1000 + Game.Ping, "Blink");
 			}
-			// Dagon KS
-			if (SubMenu.Item("dagonks").GetValue<bool>())
-			{
+			// KS Section
 				var dagon = me.Inventory.Items.FirstOrDefault(x => x.Name.Contains("item_dagon"));
+				var laser = me.Spellbook.Spell1;
+				var rocket = me.Spellbook.Spell2;
 				var enemy = ObjectMgr.GetEntities<Hero>()
 					.Where(x => x.Team != me.Team && x.IsAlive && x.IsVisible && !x.IsIllusion && !x.UnitState.HasFlag(UnitState.MagicImmune))
 					.ToList();
@@ -95,21 +97,40 @@ namespace TinkerMadness
 					var ta = i.Modifiers.Any(x => x.Name == "modifier_templar_assassin_refraction_damage");
 					var dazzle = i.Modifiers.Any(x => x.Name == "modifier_dazzle_shallow_grave");
 					var abaddon = i.Modifiers.Any(x => x.Name == "modifier_abaddon_borrowed_time");
-					var bm = i.Modifiers.Any(x => x.Name == "modifier_item_blade_mail_reflect");
 					var pipe = i.Modifiers.Any(x => x.Name == "modifier_item_pipe_barrier");
-				
-					if (Dagon.CanBeCasted() && Utils.SleepCheck("Dagon"))
+					
+					if (SubMenu.Item("autoks").GetValue<bool>() && !active)
 					{
-						if ((linken != null && linken.Cooldown == 0) || (sphere || ta || dazzle || abaddon || bm || pipe || i.IsMagicImmune()))
-							return;
-						var range = DagonRange[dagon.Level - 1];
-						var damage = Math.Floor(DagonRange[dagon.Level - 1] * (1 - i.MagicDamageResist));
-						if (me.Distance2D(i) < range && i.Health < damage)
-							Dagon.UseAbility(i);
-							Utils.Sleep(500 + Game.Ping, "Dagon");
+						if (dagon.CanBeCasted() && Utils.SleepCheck("dagon"))
+						{
+							if ((linken != null && linken.Cooldown == 0) || (sphere || ta || dazzle || abaddon || pipe))
+								return;
+							var range = DagonRange[dagon.Level - 1];
+							var damage = Math.Floor(DagonDamage[dagon.Level - 1] * (1 - i.MagicDamageResist));
+							if (me.Distance2D(i) < range && i.Health < damage)
+								dagon.UseAbility(i);
+								Utils.Sleep(500 + Game.Ping, "dagon");
+						}
+						if (laser.CanBeCasted() && Utils.SleepCheck("laser"))
+						{
+							if ((linken != null && linken.Cooldown == 0) || (sphere || ta || dazzle || abaddon))
+								return;
+							var damage = Math.Floor(LaserDamage[laser.Level - 1] - (1 - i.MagicDamageResist));
+							if (me.Distance2D(i) < 650 && i.Health < damage)
+								laser.UseAbility(i);
+								Utils.Sleep(500 + Game.Ping, "laser");
+						}
+						if (rocket.CanBeCasted() && Utils.SleepCheck("rocket"))
+						{
+							if (ta || dazzle || abaddon)
+								return;
+							var damage = Math.Floor(RocketDamage[Rocket.Level - 1] * (1 - i.MagicDamageResist));
+							if (me.Distance2D(i) < 2500 && i.Health < damage)
+								rocket.UseAbility();
+								Utils.Sleep(500 + Game.Ping, "rocket");
+						}
 					}
 				}
-			}
 			// Main combo
 			if (active && toggle)
 			{
