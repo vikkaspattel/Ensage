@@ -14,6 +14,7 @@ namespace overlays
         {
 			Menu.AddItem(new MenuItem("toppanel", "Top Panel").SetValue(true));
 			Menu.AddItem(new MenuItem("manabar", "Mana Bar").SetValue(true));
+			Menu.AddItem(new MenuItem("lasthithelp", "Last Hit Tips").SetValue(true));
             Menu.AddToMainMenu();
             Drawing.OnDraw += Overlay1;
         }
@@ -23,9 +24,9 @@ namespace overlays
             {
                 return;
             }
+			var player = ObjectMgr.LocalPlayer;
 			if (Menu.Item("manabar").GetValue<bool>())
 			{
-				var player = ObjectMgr.LocalPlayer;
 				if (player == null || player.Team == Team.Observer)
 				{
 					return;
@@ -63,6 +64,24 @@ namespace overlays
 					
 					Drawing.DrawRect(pos + new Vector2(0, sizeY + height), new Vector2(manaDelta.X, height), new Color(80, 120, 255, 255));
 					Drawing.DrawRect(pos + new Vector2(0, sizeY + height), new Vector2(sizeX, height), Color.Black, true);
+				}
+			}
+			if (Menu.Item("lasthithelp").GetValue<bool>())
+			{
+				var lasthittip =
+				ObjectMgr.GetEntities<Creep>()
+				.Where(x => x.IsVisible && x.IsAlive && x.Health < 200  && x.Team != player.Team)
+					.ToList();
+				foreach (var enemy in lasthittip)
+				{
+					var start = HUDInfo.GetHPbarPosition(enemy) + new Vector2(0, HUDInfo.GetHpBarSizeY(enemy) + 1);
+					var manaperc = enemy.Mana / enemy.MaximumMana;
+					var size = new Vector2(HUDInfo.GetHPBarSizeX(enemy), HUDInfo.GetHpBarSizeY(enemy) / 2);
+				
+					var text = string.Format("{0}", (int)enemy.Health);
+					var textSize = Drawing.MeasureText(text, "Arial", new Vector2(size.Y * 2, size.X), FontFlags.AntiAlias);
+					var textPos = start + new Vector2(size.X / 2 - textSize.X / 2, -textSize.Y / 2 + 5);
+					Drawing.DrawText(text, textPos, new Vector2(size.Y * 3, size.X), Color.White, FontFlags.AntiAlias | FontFlags.DropShadow);
 				}
 			}
 		}
