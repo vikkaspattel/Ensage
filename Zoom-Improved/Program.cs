@@ -21,6 +21,7 @@ namespace ZoomImproved
 		private static bool loaded;
 		private static void Game_OnUpdate(EventArgs args)
 		{
+			
 			if (!Game.IsInGame)
 			{
 				loaded = false;
@@ -30,6 +31,7 @@ namespace ZoomImproved
 			{
 				return;
 			}
+			Game.PrintMessage("<font color='#aaaaaa'>Zoom Improved </font><font color='#33ff66'>Loaded</font>", MessageType.LogMessage);
 			var slider = new MenuItem("distance", "Camera Distance").SetValue(new Slider(1550, 1134, 2500));
 			slider.ValueChanged += Slider_ValueChanged;
 			Menu.AddItem(slider);
@@ -39,6 +41,7 @@ namespace ZoomImproved
 			renderVar.SetValue(2*(slider.GetValue<Slider>().Value));
 			Game.GetConsoleVar("fog_enable").SetValue(0);
 			loaded = true;
+			
 		}
 		private static void Slider_ValueChanged(object sender, OnValueChangeEventArgs e)
 		{
