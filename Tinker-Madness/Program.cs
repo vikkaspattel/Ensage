@@ -19,7 +19,6 @@ namespace TinkerMadness
 		private static Hero target;
 		private static bool toggle = true;
 		private static bool active;
-		private static bool blinkToggle = true;
 		private static readonly int[] DagonDamage = new int[5] { 400, 500, 600, 700, 800 };
 		private static readonly int[] DagonRange = new int[5] { 600, 650, 700, 750, 800 };
 		private static readonly int[] LaserDamage = new int[4] { 80, 160, 240, 320 };
@@ -29,6 +28,7 @@ namespace TinkerMadness
 		{
 			Menu.AddItem(new MenuItem("go", "Go Tinker").SetValue(new KeyBind('G', KeyBindType.Press)).SetTooltip("Hoding Key will keep Tinker Madness On"));
 			Menu.AddSubMenu(SubMenu);
+			SubMenu.AddItem(new MenuItem("useblink", "Blink Combo").SetValue(true).SetTooltip("Auto use Blink During Madness"));
 			SubMenu.AddItem(new MenuItem("safeglimmer", "Glimmer Travel").SetValue(true).SetTooltip("Auto use Glimmer Cape if Tinker uses boots of Travel"));
 			SubMenu.AddItem(new MenuItem("autoks", "Auto KS").SetValue(true).SetTooltip("Auto use Dagon, Laser or rocket for Kill Steal"));
 			Menu.AddItem(new MenuItem("safeblink", "Instant Blink").SetValue(new KeyBind('F', KeyBindType.Press)).SetTooltip("Hold HotKey and After Finishing Chenneling Tinker will instant Blink on your Mouse Position"));
@@ -49,7 +49,7 @@ namespace TinkerMadness
 			ReArm = me.Spellbook.Spell4;
 			// Item init
 			Blink = me.FindItem("item_blink");
-			Dagon = me.Inventory.Items.FirstOrDefault(item => item.Name.Contains("item_dagon"));
+			Dagon = me.Inventory.Items.FirstOrDefault(x => x.Name.Contains("item_dagon"));
 			Hex = me.FindItem("item_sheepstick");
 			Soulring = me.FindItem("item_soul_ring");
 			Ethereal = me.FindItem("item_ethereal_blade");
@@ -135,7 +135,7 @@ namespace TinkerMadness
 			if (active && toggle)
 			{
 				target = me.ClosestToMouseTarget(1000);
-				if ((target == null || !target.IsVisible) && !me.IsChanneling() && !ReArm.IsChanneling)
+				if ((target == null || !target.IsVisible) && !me.IsChanneling() && !ReArm.IsChanneling && (me.Distance2D(Game.MousePosition) < 3000))
 				{
 					me.Move(Game.MousePosition);
 				}
@@ -147,7 +147,7 @@ namespace TinkerMadness
 						Utils.Sleep(150 + Game.Ping, "soulring");
 					}
 					// Blink
-					if (Blink != null && Blink.CanBeCasted() && (me.Distance2D(target) > 500) && Utils.SleepCheck("Blink") && blinkToggle)
+					if (Blink != null && Blink.CanBeCasted() && (me.Distance2D(target) > 500) && Utils.SleepCheck("Blink") && SubMenu.Item("useblink").GetValue<bool>() && !nothingCanCast() && !me.IsChanneling() && !ReArm.IsChanneling && (me.Mana > 200))
 					{
 						Blink.UseAbility(target.Position);
 						Utils.Sleep(1000 + Game.Ping, "Blink");
@@ -179,6 +179,12 @@ namespace TinkerMadness
 						Utils.Sleep(270 + Game.Ping, "ethereal");
 						Utils.ChainStun(me, 200 + Game.Ping, null, false);
 					}
+					else if (Rocket != null && Rocket.CanBeCasted() && Utils.SleepCheck("rocket") && Utils.SleepCheck("ethereal") && Utils.SleepCheck("veil"))
+					{
+						Rocket.UseAbility();
+						Utils.Sleep(150 + Game.Ping, "rocket");
+						Utils.ChainStun(me, 150 + Game.Ping, null, false);
+					}
 					else if (Dagon != null && Dagon.CanBeCasted() && Utils.SleepCheck("ethereal") && Utils.SleepCheck("h") && Utils.SleepCheck("dagon") && Utils.SleepCheck("veil"))
 					{
 						Dagon.UseAbility(target);
@@ -186,12 +192,7 @@ namespace TinkerMadness
 						Utils.ChainStun(me, 200 + Game.Ping, null, false);
 					}
 					// Skills
-					else if (Rocket != null && Rocket.CanBeCasted() && Utils.SleepCheck("rocket") && Utils.SleepCheck("ethereal") && Utils.SleepCheck("veil"))
-					{
-						Rocket.UseAbility();
-						Utils.Sleep(150 + Game.Ping, "rocket");
-						Utils.ChainStun(me, 150 + Game.Ping, null, false);
-					}
+					
 					else if (Laser != null && Laser.CanBeCasted() && Utils.SleepCheck("laser") && Utils.SleepCheck("ethereal") && Utils.SleepCheck("rocket"))
 					{
 						Laser.UseAbility(target);
