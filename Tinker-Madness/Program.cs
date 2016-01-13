@@ -147,7 +147,7 @@ namespace TinkerMadness
 						Utils.Sleep(150 + Game.Ping, "soulring");
 					}
 					// Blink
-					if (Blink != null && Blink.CanBeCasted() && (me.Distance2D(target) > 500) && Utils.SleepCheck("Blink") && SubMenu.Item("useblink").GetValue<bool>() && !nothingCanCast() && !me.IsChanneling() && !ReArm.IsChanneling && (me.Mana > 200))
+					if (Blink != null && Blink.CanBeCasted() && (me.Distance2D(target) > 500) && Utils.SleepCheck("Blink") && SubMenu.Item("useblink").GetValue<bool>() && !nothingCanCast())
 					{
 						Blink.UseAbility(target.Position);
 						Utils.Sleep(1000 + Game.Ping, "Blink");
