@@ -12,6 +12,7 @@ namespace ZoomImproved
 		private static readonly uint VK_CTRL = 0x11;
 		private static readonly uint WM_MOUSEWHEEL = 0x020A;
 		private static readonly ConVar ZoomVar = Game.GetConsoleVar("dota_camera_distance");
+		private static readonly ConVar renderVar = Game.GetConsoleVar("r_farz");
 		static void Main()
 		{
 			Game.OnWndProc += Game_OnWndProc;
@@ -35,14 +36,14 @@ namespace ZoomImproved
 			Menu.AddToMainMenu();
 			ZoomVar.RemoveFlags(ConVarFlags.Cheat);
 			ZoomVar.SetValue(slider.GetValue<Slider>().Value);
-			Game.GetConsoleVar("r_farz").SetValue(18000);
+			renderVar.SetValue(2*(slider.GetValue<Slider>().Value));
 			Game.GetConsoleVar("fog_enable").SetValue(0);
-			Game.GetConsoleVar("dota_camera_disable_zoom").SetValue(0);
 			loaded = true;
 		}
 		private static void Slider_ValueChanged(object sender, OnValueChangeEventArgs e)
 		{
 			ZoomVar.SetValue(e.GetNewValue<Slider>().Value);
+			renderVar.SetValue(2*(e.GetNewValue<Slider>().Value));
 		}
 		private static void Game_OnWndProc(WndEventArgs args)
 		{
