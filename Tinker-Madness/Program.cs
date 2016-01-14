@@ -216,7 +216,7 @@ namespace TinkerMadness
 						Utils.ChainStun(me, (ReArm.ChannelTime * 1000) + Game.Ping + 400, null, false);
 						Utils.Sleep(700 + Game.Ping, "rearm");
 					}
-					else if (!me.IsChanneling() && !ReArm.IsChanneling && nothingCanCast())
+					else if (!me.IsChanneling() && !ReArm.IsChanneling && nothingCanCast() && Utils.SleepCheck("rearm"))
 					{
 						me.Attack(target);
 					}
