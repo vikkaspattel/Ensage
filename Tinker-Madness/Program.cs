@@ -13,6 +13,7 @@ namespace TinkerMadness
 	{
 		private static readonly Menu Menu = new Menu("Tinker Madness", "tinkermadness", true, "npc_dota_hero_tinker", true);
 		private static readonly Menu SubMenu = new Menu("More", "more");
+		private static readonly Menu SubMenu2 = new Menu("Control Rearm", "controlrearm");
 		private static Ability Laser, Rocket, ReArm;
 		private static Item Blink, Dagon, Hex, Soulring, Ethereal, Veil, Orchid, Shiva, Glimmer;
 		private static Hero me;
@@ -28,10 +29,14 @@ namespace TinkerMadness
 		{
 			Menu.AddItem(new MenuItem("go", "Go Tinker").SetValue(new KeyBind('G', KeyBindType.Press)).SetTooltip("Hoding Key will keep Tinker Madness On"));
 			Menu.AddSubMenu(SubMenu);
+			SubMenu.AddSubMenu(SubMenu2);
 			SubMenu.AddItem(new MenuItem("useblink", "Blink Combo").SetValue(true).SetTooltip("Auto use Blink During Madness"));
 			SubMenu.AddItem(new MenuItem("safeglimmer", "Glimmer Travel").SetValue(true).SetTooltip("Auto use Glimmer Cape if Tinker uses boots of Travel"));
 			SubMenu.AddItem(new MenuItem("autoks", "Auto KS").SetValue(true).SetTooltip("Auto use Dagon, Laser or rocket for Kill Steal"));
 			Menu.AddItem(new MenuItem("smartblink", "Smart Blink").SetValue(new KeyBind('F', KeyBindType.Press)).SetTooltip("A Blink QuickCast if Hero is not Channeling"));
+			SubMenu2.AddItem(new MenuItem("togglerearm", "Enable").SetValue(false).SetTooltip("When you Cast Rearm script decide should it be casted or not and if casted makes sure it cant be canceled"));
+			SubMenu2.AddItem(new MenuItem("gorearm", "Ulti Key?").SetValue(new KeyBind('R', KeyBindType.Press)).SetTooltip("what is your rearm key in dota 2 settings? use it here"));
+			
 			Menu.AddToMainMenu();
 			Game.OnUpdate += Game_OnUpdate;
 			Game.OnWndProc += Game_OnWndProc;
@@ -57,6 +62,7 @@ namespace TinkerMadness
 			Orchid = me.FindItem("item_orchid");
 			Shiva = me.FindItem("item_shivas_guard");
 			Glimmer = me.FindItem("item_glimmer_cape");
+			
 			// Manacost calculations
 			var manaForCombo = Laser.ManaCost + Rocket.ManaCost;
 			if (Dagon != null && Dagon.CanBeCasted())
@@ -131,79 +137,85 @@ namespace TinkerMadness
 						}
 					}
 				}
+			// Conrol Rearm
+			if (ReArm !=null && !ReArm.IsChanneling && ReArm.CanBeCasted() && Utils.SleepCheck("rearm") && SubMenu2.Item("togglerearm").GetValue<bool>() && (SubMenu2.Item("gorearm").GetValue<KeyBind>().Active))
+			{
+				ReArm.UseAbility();
+				Utils.ChainStun(me, (ReArm.ChannelTime * 1000) + Game.Ping + 400, null, false);
+				Utils.Sleep(700 + Game.Ping, "rearm");
+			}
 			// Main combo
 			if (active && toggle)
 			{
 				target = me.ClosestToMouseTarget(1000);
-				if ((target == null || !target.IsVisible) && !me.IsChanneling() && !ReArm.IsChanneling && (me.Distance2D(Game.MousePosition) < 3000))
+				if ((target == null || !target.IsVisible) && !me.IsChanneling() && (me.Distance2D(Game.MousePosition) < 3000) && Utils.SleepCheck("rearm"))
 				{
 					me.Move(Game.MousePosition);
 				}
-				if (target != null && target.IsAlive && !target.IsIllusion && !target.IsMagicImmune() && Utils.SleepCheck("ReArm") && !me.IsChanneling() && (me.Distance2D(target) < 3000))
+				if (target != null && target.IsAlive && !target.IsIllusion && !target.IsMagicImmune() && Utils.SleepCheck("rearm") && !me.IsChanneling() && (me.Distance2D(target) < 3000))
 				{
-					if (Soulring != null && Soulring.CanBeCasted() && me.Health > 300 && Utils.SleepCheck("soulring"))
+					if (Soulring != null && Soulring.CanBeCasted() && me.Health > 300 && Utils.SleepCheck("soulring") && Utils.SleepCheck("rearm"))
 					{
 						Soulring.UseAbility();
 						Utils.Sleep(150 + Game.Ping, "soulring");
 					}
 					// Blink
-					if (Blink != null && Blink.CanBeCasted() && (me.Distance2D(target) > 500) && Utils.SleepCheck("Blink") && SubMenu.Item("useblink").GetValue<bool>() && !nothingCanCast() && !me.IsChanneling() && !ReArm.IsChanneling && (me.Mana > 200))
+					if (Blink != null && Blink.CanBeCasted() && (me.Distance2D(target) > 500) && Utils.SleepCheck("Blink") && SubMenu.Item("useblink").GetValue<bool>() && !nothingCanCast() && !me.IsChanneling() && !ReArm.IsChanneling && (me.Mana > 200) && Utils.SleepCheck("rearm"))
 					{
 						Blink.UseAbility(target.Position);
 						Utils.Sleep(1000 + Game.Ping, "Blink");
 					}
 					// Items
-					else if (Shiva != null && Shiva.CanBeCasted() && Utils.SleepCheck("shiva"))
+					else if (Shiva != null && Shiva.CanBeCasted() && Utils.SleepCheck("shiva") && Utils.SleepCheck("rearm"))
 					{
 						Shiva.UseAbility();
 						Utils.Sleep(100 + Game.Ping, "shiva");
 						Utils.ChainStun(me, 200 + Game.Ping, null, false);
 					}
-					else if (Veil != null && Veil.CanBeCasted() && Utils.SleepCheck("veil"))
+					else if (Veil != null && Veil.CanBeCasted() && Utils.SleepCheck("veil") && Utils.SleepCheck("rearm"))
 					{
 						Veil.UseAbility(target.Position);
 						Utils.Sleep(150 + Game.Ping, "veil");
 						Utils.Sleep(300 + Game.Ping, "ve");
 						Utils.ChainStun(me, 170 + Game.Ping, null, false);
 					}
-					else if (Hex != null && Hex.CanBeCasted() && Utils.SleepCheck("hex"))
+					else if (Hex != null && Hex.CanBeCasted() && Utils.SleepCheck("hex") && Utils.SleepCheck("rearm"))
 					{
 						Hex.UseAbility(target);
 						Utils.Sleep(150 + Game.Ping, "hex");
 						Utils.Sleep(300 + Game.Ping, "h");
 						Utils.ChainStun(me, 170 + Game.Ping, null, false);
 					}
-					else if (Ethereal != null && Ethereal.CanBeCasted() && Utils.SleepCheck("ethereal"))
+					else if (Ethereal != null && Ethereal.CanBeCasted() && Utils.SleepCheck("ethereal") && Utils.SleepCheck("rearm"))
 					{
 						Ethereal.UseAbility(target);
 						Utils.Sleep(270 + Game.Ping, "ethereal");
 						Utils.ChainStun(me, 200 + Game.Ping, null, false);
 					}
-					else if (Rocket != null && Rocket.CanBeCasted() && Utils.SleepCheck("rocket") && Utils.SleepCheck("ethereal") && Utils.SleepCheck("veil"))
-					{
-						Rocket.UseAbility();
-						Utils.Sleep(150 + Game.Ping, "rocket");
-						Utils.ChainStun(me, 150 + Game.Ping, null, false);
-					}
-					else if (Dagon != null && Dagon.CanBeCasted() && Utils.SleepCheck("ethereal") && Utils.SleepCheck("h") && Utils.SleepCheck("dagon") && Utils.SleepCheck("veil"))
+					else if (Dagon != null && Dagon.CanBeCasted() && Utils.SleepCheck("ethereal") && Utils.SleepCheck("h") && Utils.SleepCheck("dagon") && Utils.SleepCheck("veil") && Utils.SleepCheck("rearm"))
 					{
 						Dagon.UseAbility(target);
 						Utils.Sleep(270 + Game.Ping, "dagon");
 						Utils.ChainStun(me, 200 + Game.Ping, null, false);
 					}
 					// Skills
-					
-					else if (Laser != null && Laser.CanBeCasted() && Utils.SleepCheck("laser") && Utils.SleepCheck("ethereal") && Utils.SleepCheck("rocket"))
+					else if (Rocket != null && Rocket.CanBeCasted() && Utils.SleepCheck("rocket") && Utils.SleepCheck("ethereal") && Utils.SleepCheck("veil") && Utils.SleepCheck("rearm"))
+					{
+						Rocket.UseAbility();
+						Utils.Sleep(150 + Game.Ping, "rocket");
+						Utils.ChainStun(me, 150 + Game.Ping, null, false);
+					}
+					else if (Laser != null && Laser.CanBeCasted() && Utils.SleepCheck("laser") && Utils.SleepCheck("ethereal") && Utils.SleepCheck("rocket") && Utils.SleepCheck("rearm"))
 					{
 						Laser.UseAbility(target);
 						Utils.Sleep(150 + Game.Ping, "laser");
 						Utils.ChainStun(me, 150 + Game.Ping, null, false);
 					}
-					else if (ReArm != null && ReArm.CanBeCasted() && me.Mana > 200 && Utils.SleepCheck("ReArm") && !ReArm.IsChanneling && nothingCanCast())
+					else if (ReArm != null && ReArm.CanBeCasted() && me.Mana > 200 && Utils.SleepCheck("rearm") && !ReArm.IsChanneling && nothingCanCast())
 					{
 						ReArm.UseAbility();
 						Utils.ChainStun(me, (ReArm.ChannelTime * 1000) + Game.Ping + 400, null, false);
-						Utils.Sleep(700 + Game.Ping, "ReArm");
+						Utils.Sleep(700 + Game.Ping, "rearm");
 					}
 					else if (!me.IsChanneling() && !ReArm.IsChanneling && nothingCanCast())
 					{
