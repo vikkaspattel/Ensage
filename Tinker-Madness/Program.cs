@@ -13,7 +13,7 @@ namespace TinkerMadness
 	{
 		private static readonly Menu Menu = new Menu("Tinker Madness", "tinkermadness", true, "npc_dota_hero_tinker", true);
 		private static readonly Menu SubMenu = new Menu("More", "more");
-		private static readonly Menu SubMenu2 = new Menu("Control Rearm", "controlrearm");
+		private static readonly Menu SubMenu2 = new Menu("Control ReArm", "controlrearm");
 		private static Ability Laser, Rocket, ReArm;
 		private static Item Blink, Dagon, Hex, Soulring, Ethereal, Veil, Orchid, Shiva, Glimmer;
 		private static Hero me;
@@ -28,15 +28,14 @@ namespace TinkerMadness
 		static void Main(string[] args)
 		{
 			Menu.AddItem(new MenuItem("go", "Go Tinker").SetValue(new KeyBind('G', KeyBindType.Press)).SetTooltip("Hoding Key will keep Tinker Madness On"));
+			Menu.AddItem(new MenuItem("smartblink", "Smart Blink").SetValue(new KeyBind('F', KeyBindType.Press)).SetTooltip("A Blink QuickCast if Hero is not Channeling"));
 			Menu.AddSubMenu(SubMenu);
-			SubMenu.AddSubMenu(SubMenu2);
 			SubMenu.AddItem(new MenuItem("useblink", "Blink Combo").SetValue(true).SetTooltip("Auto use Blink During Madness"));
 			SubMenu.AddItem(new MenuItem("safeglimmer", "Glimmer Travel").SetValue(true).SetTooltip("Auto use Glimmer Cape if Tinker uses boots of Travel"));
 			SubMenu.AddItem(new MenuItem("autoks", "Auto KS").SetValue(true).SetTooltip("Auto use Dagon, Laser or rocket for Kill Steal"));
-			Menu.AddItem(new MenuItem("smartblink", "Smart Blink").SetValue(new KeyBind('F', KeyBindType.Press)).SetTooltip("A Blink QuickCast if Hero is not Channeling"));
+			SubMenu.AddSubMenu(SubMenu2);
 			SubMenu2.AddItem(new MenuItem("togglerearm", "Enable").SetValue(false).SetTooltip("When you Cast Rearm script decide should it be casted or not and if casted makes sure it cant be canceled"));
 			SubMenu2.AddItem(new MenuItem("gorearm", "Ulti Key?").SetValue(new KeyBind('R', KeyBindType.Press)).SetTooltip("what is your rearm key in dota 2 settings? use it here"));
-			
 			Menu.AddToMainMenu();
 			Game.OnUpdate += Game_OnUpdate;
 			Game.OnWndProc += Game_OnWndProc;
