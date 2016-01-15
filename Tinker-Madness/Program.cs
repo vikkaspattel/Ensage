@@ -34,7 +34,7 @@ namespace TinkerMadness
 			SubMenu.AddItem(new MenuItem("safeglimmer", "Glimmer Travel").SetValue(true).SetTooltip("Auto use Glimmer Cape if Tinker uses boots of Travel"));
 			SubMenu.AddItem(new MenuItem("autoks", "Auto KS").SetValue(true).SetTooltip("Auto use Dagon, Laser or rocket for Kill Steal"));
 			SubMenu.AddSubMenu(SubMenu2);
-			SubMenu2.AddItem(new MenuItem("togglerearm", "Enable").SetValue(false).SetTooltip("When you Cast Rearm script decide should it be casted or not and if casted makes sure it cant be canceled"));
+			SubMenu2.AddItem(new MenuItem("togglerearm", "Enable").SetValue(true).SetTooltip("When you Cast Rearm script decide should it be casted or not and if casted makes sure it cant be canceled"));
 			SubMenu2.AddItem(new MenuItem("gorearm", "Ulti Key?").SetValue(new KeyBind('R', KeyBindType.Press)).SetTooltip("what is your rearm key in dota 2 settings? use it here"));
 			Menu.AddToMainMenu();
 			Game.OnUpdate += Game_OnUpdate;
