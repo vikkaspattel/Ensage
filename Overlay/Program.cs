@@ -15,6 +15,20 @@ namespace overlays
 		private static Hero hero;
 		private static readonly List<ParticleEffect> ParticleEffects = new List<ParticleEffect>();
 		private static readonly Vector4[] Spots = { new Vector4(2690, -4409, 3529, -5248), new Vector4(3936, -3277, 5007, -4431), new Vector4(1088, -3200, 2303, -4543), new Vector4(-3307, 383, -2564, -413), new Vector4(-1023, -2728, 63, -3455), new Vector4(-2227, -3968, -1463, -4648), new Vector4(-4383, 1295, -3136, 400),  new Vector4(3344, 942, 4719, 7), new Vector4(-3455, 4927, -2688, 3968), new Vector4(-4955, 4071, -3712, 3264), new Vector4(3456, -384, 4543, -1151), new Vector4(-1967, 3135, -960, 2176), new Vector4(-831, 4095, 0, 3200), new Vector4(448, 3775, 1663, 2816)};
+		private static Vector2 GetTopPanelPosition(Hero v)
+		{
+			Vector2 vec2;
+			var handle = v.Handle;
+			if (TopPos.TryGetValue(handle, out vec2)) return vec2;
+			vec2 = HUDInfo.GetTopPanelPosition(v);
+			TopPos.Add(handle,vec2);
+			return vec2;
+		}
+		private static readonly Dictionary<uint,Vector2> TopPos=new Dictionary<uint, Vector2>();
+		private static Vector2 GetTopPalenSize(Hero hero)
+		{
+			return new Vector2((float)HUDInfo.GetTopPanelSizeX(hero), (float)HUDInfo.GetTopPanelSizeY(hero));
+		}
 		private static void Main()
         {
 			Menu.AddItem(new MenuItem("toppanel", "Top Panel").SetValue(true));
@@ -55,22 +69,19 @@ namespace overlays
 			}
 			if (Menu.Item("toppanel").GetValue<bool>())
 			{
-				for (uint i = 0; i < 10; i++)
+				foreach (var v in Ensage.Common.Objects.Heroes.All.Where(x=>x.IsAlive))
 				{
-					var v = ObjectMgr.GetPlayerById(i).Hero;
-					if (v == null || !v.IsAlive) continue;
-					var pos = HUDInfo.GetTopPanelPosition(v);
-					var sizeX = (float)HUDInfo.GetTopPanelSizeX(v);
-					var sizeY = (float)HUDInfo.GetTopPanelSizeY(v);
-					var healthDelta = new Vector2(v.Health * sizeX / v.MaximumHealth, 0);
-					var manaDelta = new Vector2(v.Mana * sizeX / v.MaximumMana, 0);
+					var pos = GetTopPanelPosition(v);
+					var size = GetTopPalenSize(v);
+					var healthDelta = new Vector2(v.Health * size.X / v.MaximumHealth, 0);
+					var manaDelta = new Vector2(v.Mana * size.X / v.MaximumMana, 0);
 					const int height = 7;
 					
-					Drawing.DrawRect(pos + new Vector2(0, sizeY + 1), new Vector2(healthDelta.X, height), new Color(0, 255, 0, 100));
-					Drawing.DrawRect(pos + new Vector2(0, sizeY + 1), new Vector2(sizeX, height), Color.Black, true);
+					Drawing.DrawRect(pos + new Vector2(0, size.Y + 1), new Vector2(healthDelta.X, height), new Color(0, 255, 0, 100));
+					Drawing.DrawRect(pos + new Vector2(0, size.Y + 1), new Vector2(size.X, height), Color.Black, true);
 					
-					Drawing.DrawRect(pos + new Vector2(0, sizeY + height), new Vector2(manaDelta.X, height), new Color(80, 120, 255, 255));
-					Drawing.DrawRect(pos + new Vector2(0, sizeY + height), new Vector2(sizeX, height), Color.Black, true);
+					Drawing.DrawRect(pos + new Vector2(0, size.Y + height), new Vector2(manaDelta.X, height), new Color(80, 120, 255, 255));
+					Drawing.DrawRect(pos + new Vector2(0, size.Y + height), new Vector2(size.X, height), Color.Black, true);
 				}
 			}
 			if (Menu.Item("lasthithelp").GetValue<bool>())
