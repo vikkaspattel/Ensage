@@ -17,7 +17,6 @@ namespace TinkerMadness
 		private static Item Blink, Dagon, Hex, Soulring, Ethereal, Veil, Orchid, Shiva, Glimmer;
 		private static Hero me;
 		private static Hero target;
-		private static bool toggle = true;
 		private static bool active;
 		private static readonly int[] DagonDamage = new int[5] { 400, 500, 600, 700, 800 };
 		private static readonly int[] DagonRange = new int[5] { 600, 650, 700, 750, 800 };
@@ -142,7 +141,7 @@ namespace TinkerMadness
 				Utils.Sleep(700 + Game.Ping, "rearm");
 			}
 			// Main combo
-			if (active && toggle)
+			if (active)
 			{
 				target = me.ClosestToMouseTarget(1000);
 				if ((target == null || !target.IsVisible) && !me.IsChanneling() && (me.Distance2D(Game.MousePosition) < 3000) && Utils.SleepCheck("rearm"))
