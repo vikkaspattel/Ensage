@@ -25,6 +25,7 @@ namespace overlays
 			return vec2;
 		}
 		private static readonly Dictionary<uint,Vector2> TopPos=new Dictionary<uint, Vector2>();
+		private static readonly Dictionary<Hero, Ability> UltimateAbilities = new Dictionary<Hero, Ability>();
 		private static Vector2 GetTopPalenSize(Hero hero)
 		{
 			return new Vector2((float)HUDInfo.GetTopPanelSizeX(hero), (float)HUDInfo.GetTopPanelSizeY(hero));
@@ -82,6 +83,38 @@ namespace overlays
 					
 					Drawing.DrawRect(pos + new Vector2(0, size.Y + height), new Vector2(manaDelta.X, height), new Color(80, 120, 255, 255));
 					Drawing.DrawRect(pos + new Vector2(0, size.Y + height), new Vector2(size.X, height), Color.Black, true);
+				}
+				foreach (var v in Ensage.Common.Objects.Heroes.All.Where(x=> x.IsAlive && x.Team != player.Team))
+				{
+					Ability ultimate;
+					if (!UltimateAbilities.TryGetValue(v, out ultimate))
+					{
+						var ult = v.Spellbook.Spells.First(x => x.AbilityType == AbilityType.Ultimate);
+						if (ult != null) UltimateAbilities.Add(v, ult);
+					}
+					else if (ultimate != null && ultimate.Level > 0)
+					{
+						var pos = GetTopPanelPosition(v);
+						var size = GetTopPalenSize(v);
+						var ultPos = pos + new Vector2(size.X/2 - 5, size.Y + 1);
+						const int height = 7;
+						string path;
+							
+						switch (ultimate.AbilityState)
+						{
+							case AbilityState.NotEnoughMana:
+								path = "materials/ensage_ui/other/ulti_nomana.vmat";
+								break;
+							case AbilityState.OnCooldown:
+								path = "materials/ensage_ui/other/ulti_cooldown.vmat";
+								break;
+							default:
+								path = "materials/ensage_ui/other/ulti_ready.vmat";
+								break;
+						}
+						Drawing.DrawRect(ultPos, new Vector2(14, 14), Drawing.GetTexture(path));
+					}
+					
 				}
 			}
 			if (Menu.Item("lasthithelp").GetValue<bool>())
@@ -162,6 +195,7 @@ namespace overlays
 			const double bonus = 1.115;
 			DrawLine(new Vector3((position1.X + position2.X) / 2, position1.Y, 0), (float) ((position2.X - position1.X) / 2 * bonus), 1, 0);
 			DrawLine(new Vector3((position1.X + position2.X) / 2, position2.Y, 0), (float) ((position2.X - position1.X) / 2 * bonus), 1, 0);
+			
 			DrawLine(new Vector3(position1.X, (position1.Y + position2.Y) / 2, 0), (float) ((position1.Y - position2.Y) / 2 * bonus), 0, 1);
 			DrawLine(new Vector3(position2.X, (position1.Y + position2.Y) / 2, 0), (float) ((position1.Y - position2.Y) / 2 * bonus), 0, 1);
 		}
