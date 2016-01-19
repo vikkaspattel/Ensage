@@ -207,18 +207,10 @@ namespace TinkerMadness
 		}
 		private static bool nothingCanCast()
 		{
-			if (!Laser.CanBeCasted() &&
-				!Rocket.CanBeCasted() &&
-				!Ethereal.CanBeCasted() &&
-				!Dagon.CanBeCasted() &&
-				!Hex.CanBeCasted() &&
-				!Shiva.CanBeCasted() &&
-				!Veil.CanBeCasted())
+			if (!Laser.CanBeCasted() && !Rocket.CanBeCasted() && !Ethereal.CanBeCasted() && !Dagon.CanBeCasted() && !Hex.CanBeCasted() && !Shiva.CanBeCasted() && !Veil.CanBeCasted())
 				return true;
 			else
-			{
 				return false;
-			}
 		}
 		private static void Game_OnWndProc(WndEventArgs args)
 		{
