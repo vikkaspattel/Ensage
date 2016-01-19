@@ -36,6 +36,7 @@ namespace TinkerMadness
 			Menu.AddToMainMenu();
 			Game.OnUpdate += Game_OnUpdate;
 			Game.OnWndProc += Game_OnWndProc;
+			Game.PrintMessage("<font color='#aaaaaa'>Tinker Madness </font><font color='#33ff66'>Loaded</font>", MessageType.LogMessage);
 		}
 		public static void Game_OnUpdate(EventArgs args)
 		{
@@ -44,6 +45,7 @@ namespace TinkerMadness
 			{
 				return;
 			}
+			
 			// Ability init
 			Laser = me.Spellbook.Spell1;
 			Rocket = me.Spellbook.Spell2;
@@ -73,18 +75,21 @@ namespace TinkerMadness
 				manaForCombo += 100;
 			if (Glimmer != null && Glimmer.CanBeCasted())
 				manaForCombo += 110;
+			
 			// Glimmer Use on Boots of Travel
 			if (Glimmer !=null && me.IsChanneling() && Glimmer.CanBeCasted() && Utils.SleepCheck("Glimmer") && !ReArm.IsChanneling && (SubMenu.Item("safeglimmer").GetValue<bool>()))
 				{
 					Glimmer.UseAbility(me);
 					Utils.Sleep(100 + Game.Ping, "Glimmer");
 				}
+				
 			// Smart Blink
 			if (Blink !=null && !me.IsChanneling() && Blink.CanBeCasted() && Utils.SleepCheck("Blink") && (Menu.Item("smartblink").GetValue<KeyBind>().Active))
 			{
 				Blink.UseAbility(Game.MousePosition);
 				Utils.Sleep(1000 + Game.Ping, "Blink");
 			}
+			
 			// KS Section
 				var dagon = me.Inventory.Items.FirstOrDefault(x => x.Name.Contains("item_dagon"));
 				var laser = me.Spellbook.Spell1;
@@ -133,6 +138,7 @@ namespace TinkerMadness
 						}
 					}
 				}
+				
 			// Conrol Rearm
 			if (ReArm !=null && !ReArm.IsChanneling && ReArm.CanBeCasted() && Utils.SleepCheck("rearm") && (Menu.Item("gorearm").GetValue<KeyBind>().Active))
 			{
@@ -140,6 +146,7 @@ namespace TinkerMadness
 				Utils.ChainStun(me, (ReArm.ChannelTime * 1000) + Game.Ping + 400, null, false);
 				Utils.Sleep(700 + Game.Ping, "rearm");
 			}
+			
 			// Main combo
 			if (active)
 			{
@@ -155,12 +162,14 @@ namespace TinkerMadness
 						Soulring.UseAbility();
 						Utils.Sleep(150 + Game.Ping, "soulring");
 					}
+					
 					// Blink
 					if (Blink != null && Blink.CanBeCasted() && (me.Distance2D(target) > 500) && Utils.SleepCheck("Blink") && SubMenu.Item("useblink").GetValue<bool>() && !nothingCanCast() && !me.IsChanneling() && !ReArm.IsChanneling && (me.Mana > 200) && Utils.SleepCheck("rearm"))
 					{
 						Blink.UseAbility(target.Position);
 						Utils.Sleep(1000 + Game.Ping, "Blink");
 					}
+					
 					// Items
 					else if (Shiva != null && Shiva.CanBeCasted() && Utils.SleepCheck("shiva") && Utils.SleepCheck("rearm"))
 					{
@@ -194,6 +203,7 @@ namespace TinkerMadness
 						Utils.Sleep(270 + Game.Ping, "dagon");
 						Utils.ChainStun(me, 200 + Game.Ping, null, false);
 					}
+					
 					// Skills
 					else if (Rocket != null && Rocket.CanBeCasted() && Utils.SleepCheck("rocket") && Utils.SleepCheck("ethereal") && Utils.SleepCheck("veil") && Utils.SleepCheck("rearm"))
 					{
