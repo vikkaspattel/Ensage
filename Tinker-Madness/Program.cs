@@ -231,9 +231,9 @@ namespace TinkerMadness
 			}
 		}
 		private static bool nothingCanCast()
-        {
+		{
 			if (!Laser.CanBeCasted() &&
-                !Rocket.CanBeCasted() &&
+				!Rocket.CanBeCasted() &&
 				!Ethereal.CanBeCasted() &&
 				!Dagon.CanBeCasted() &&
 				!Hex.CanBeCasted() &&
