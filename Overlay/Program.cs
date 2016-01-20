@@ -39,6 +39,7 @@ namespace overlays
 			Menu.AddToMainMenu();
 			Drawing.OnDraw += Overlay1;
 			Game.OnUpdate += Game_OnUpdate;
+			Game.PrintMessage("<font color='#aaaaaa'>Overlay </font><font color='#33ff66'>Loaded</font>", MessageType.LogMessage);
         }
 		private static void Overlay1(EventArgs args)
         {
