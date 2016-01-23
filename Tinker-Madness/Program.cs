@@ -24,9 +24,9 @@ namespace TinkerMadness
 		private static readonly int[] RocketDamage = new int[4] { 125, 200, 275, 350 };
 		static void Main(string[] args)
 		{
-			Menu.AddItem(new MenuItem("go", "Go Tinker").SetValue(new KeyBind('G', KeyBindType.Press)).SetTooltip("Hoding Key will keep Tinker Madness On"));
-			Menu.AddItem(new MenuItem("smartblink", "Smart Blink").SetValue(new KeyBind('F', KeyBindType.Press)).SetTooltip("A Blink QuickCast. What is your blink kry in dota2 settings? set it here"));
-			Menu.AddItem(new MenuItem("gorearm", "Ulti Key?").SetValue(new KeyBind('R', KeyBindType.Press)).SetTooltip("what is your rearm key in dota 2 settings? use it here"));
+			Menu.AddItem(new MenuItem("go", "Combo Key").SetValue(new KeyBind('G', KeyBindType.Press)).SetTooltip("Hoding Key will keep Tinker Madness On"));
+			Menu.AddItem(new MenuItem("smartblink", "Smart Blink Key").SetValue(new KeyBind('F', KeyBindType.Press)).SetTooltip("A Smart Blink QuickCast. What is your blink key in dota2 settings? set it here"));
+			Menu.AddItem(new MenuItem("gorearm", "Smart Ulti Key").SetValue(new KeyBind('R', KeyBindType.Press)).SetTooltip("what is your rearm key in dota 2 settings? use it here"));
 			Menu.AddSubMenu(SubMenu);
 			SubMenu.AddItem(new MenuItem("useblink", "Blink Combo").SetValue(true).SetTooltip("Auto use Blink During Madness"));
 			SubMenu.AddItem(new MenuItem("safeglimmer", "Glimmer Travel").SetValue(true).SetTooltip("Auto use Glimmer Cape if Tinker uses boots of Travel"));
