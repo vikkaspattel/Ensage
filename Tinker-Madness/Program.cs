@@ -27,7 +27,7 @@ namespace TinkerMadness
 			Menu.AddItem(new MenuItem("go", "Combo Key").SetValue(new KeyBind('G', KeyBindType.Press)).SetTooltip("Hoding Key will keep Tinker Madness On"));
 			Menu.AddItem(new MenuItem("smartblink", "Smart Blink Key").SetValue(new KeyBind('F', KeyBindType.Press)).SetTooltip("A Smart Blink QuickCast. What is your blink key in dota2 settings? set it here"));
 			Menu.AddItem(new MenuItem("gorearm", "Smart Ulti Key").SetValue(new KeyBind('R', KeyBindType.Press)).SetTooltip("What is your rearm key in dota 2 settings? use it here"));
-			Menu.AddItem(new MenuItem("FontInfo", "Press F5 after your change"));
+			Menu.AddItem(new MenuItem("note", "Remember, KeyBinds are Presstype keys"));
 			Menu.AddSubMenu(SubMenu);
 			SubMenu.AddItem(new MenuItem("useblink", "Use Blink in Combo").SetValue(true).SetTooltip("Auto use Blink During Madness"));
 			SubMenu.AddItem(new MenuItem("safeglimmer", "Glimmer Travel").SetValue(true).SetTooltip("Auto use Glimmer Cape if Tinker uses boots of Travel"));
