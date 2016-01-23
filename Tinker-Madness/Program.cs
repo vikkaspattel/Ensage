@@ -28,7 +28,7 @@ namespace TinkerMadness
 			Menu.AddItem(new MenuItem("smartblink", "Smart Blink Key").SetValue(new KeyBind('F', KeyBindType.Press)).SetTooltip("A Smart Blink QuickCast. What is your blink key in dota2 settings? set it here"));
 			Menu.AddItem(new MenuItem("gorearm", "Smart Ulti Key").SetValue(new KeyBind('R', KeyBindType.Press)).SetTooltip("what is your rearm key in dota 2 settings? use it here"));
 			Menu.AddSubMenu(SubMenu);
-			SubMenu.AddItem(new MenuItem("useblink", "Blink Combo").SetValue(true).SetTooltip("Auto use Blink During Madness"));
+			SubMenu.AddItem(new MenuItem("useblink", "Use Blink in Combo").SetValue(true).SetTooltip("Auto use Blink During Madness"));
 			SubMenu.AddItem(new MenuItem("safeglimmer", "Glimmer Travel").SetValue(true).SetTooltip("Auto use Glimmer Cape if Tinker uses boots of Travel"));
 			SubMenu.AddItem(new MenuItem("autoks", "Auto KS").SetValue(true).SetTooltip("Auto use Dagon, Laser or rocket for Kill Steal"));
 			
