@@ -72,9 +72,8 @@ namespace TinkerMadness
 				Utils.Sleep(1000 + Game.Ping, "Blink");
 			}
 			// KS Section
-				var dagon = me.Inventory.Items.FirstOrDefault(x => x.Name.Contains("item_dagon"));
-				var laser = me.Spellbook.Spell1;
-				var rocket = me.Spellbook.Spell2;
+			if (SubMenu.Item("autoks").GetValue<bool>() && !active)
+			{
 				var enemy = ObjectMgr.GetEntities<Hero>()
 					.Where(x => x.Team != me.Team && x.IsAlive && x.IsVisible && !x.IsIllusion && !x.UnitState.HasFlag(UnitState.MagicImmune))
 					.ToList();
@@ -87,38 +86,38 @@ namespace TinkerMadness
 					var abaddon = i.Modifiers.Any(x => x.Name == "modifier_abaddon_borrowed_time");
 					var pipe = i.Modifiers.Any(x => x.Name == "modifier_item_pipe_barrier");
 					
-					if (SubMenu.Item("autoks").GetValue<bool>() && !active)
-					{
-						if (dagon.CanBeCasted() && Utils.SleepCheck("dagon") && Utils.SleepCheck("rearm") && !ReArm.IsChanneling)
+					
+						if (Dagon.CanBeCasted() && Utils.SleepCheck("dagon") && Utils.SleepCheck("rearm") && !ReArm.IsChanneling)
 						{
 							if ((linken != null && linken.Cooldown == 0) || (sphere || ta || dazzle || abaddon || pipe))
 								return;
-							var range = DagonRange[dagon.Level - 1];
-							var damage = Math.Floor(DagonDamage[dagon.Level - 1] * (1 - i.MagicDamageResist));
+							var range = DagonRange[Dagon.Level - 1];
+							var damage = Math.Floor(DagonDamage[Dagon.Level - 1] * (1 - i.MagicDamageResist));
 							if (me.Distance2D(i) < range && i.Health < damage)
-								dagon.UseAbility(i);
+								Dagon.UseAbility(i);
 								Utils.Sleep(500 + Game.Ping, "dagon");
 						}
-						if (laser.CanBeCasted() && Utils.SleepCheck("laser") && Utils.SleepCheck("rearm") && !ReArm.IsChanneling)
+						if (Laser.CanBeCasted() && Utils.SleepCheck("laser") && Utils.SleepCheck("rearm") && !ReArm.IsChanneling)
 						{
 							if ((linken != null && linken.Cooldown == 0) || (sphere || ta || dazzle || abaddon))
 								return;
-							var damage = Math.Floor(LaserDamage[laser.Level - 1] - (1 - i.MagicDamageResist));
+							var damage = Math.Floor(LaserDamage[Laser.Level - 1] - (1 - i.MagicDamageResist));
 							if (me.Distance2D(i) < 650 && i.Health < damage)
-								laser.UseAbility(i);
+								Laser.UseAbility(i);
 								Utils.Sleep(500 + Game.Ping, "laser");
 						}
-						if (rocket.CanBeCasted() && Utils.SleepCheck("rocket") && Utils.SleepCheck("rearm") && !ReArm.IsChanneling)
+						if (Rocket.CanBeCasted() && Utils.SleepCheck("rocket") && Utils.SleepCheck("rearm") && !ReArm.IsChanneling)
 						{
 							if (ta || dazzle || abaddon)
 								return;
 							var damage = Math.Floor(RocketDamage[Rocket.Level - 1] * (1 - i.MagicDamageResist));
 							if (me.Distance2D(i) < 2500 && i.Health < damage)
-								rocket.UseAbility();
+								Rocket.UseAbility();
 								Utils.Sleep(500 + Game.Ping, "rocket");
 						}
-					}
+					
 				}
+			}
 			// Conrol Rearm
 			if (ReArm !=null && !ReArm.IsChanneling && ReArm.CanBeCasted() && Utils.SleepCheck("rearm") && (Menu.Item("gorearm").GetValue<KeyBind>().Active))
 			{
@@ -224,7 +223,7 @@ namespace TinkerMadness
 				else
 				{
 					active = false;
-				}
+				}						
 			}
 		}
 	}
