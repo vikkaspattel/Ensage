@@ -69,7 +69,7 @@ namespace TinkerMadness
 			if (Blink !=null && !me.IsChanneling() && Blink.CanBeCasted() && Utils.SleepCheck("Blink") && (Menu.Item("smartblink").GetValue<KeyBind>().Active))
 			{
 				Blink.UseAbility(Game.MousePosition);
-				Utils.Sleep(1000 + Game.Ping, "Blink");
+				Utils.Sleep(750 + Game.Ping, "Blink");
 			}
 			// KS Section
 			if (SubMenu.Item("autoks").GetValue<bool>() && !active)
@@ -86,8 +86,7 @@ namespace TinkerMadness
 					var abaddon = i.Modifiers.Any(x => x.Name == "modifier_abaddon_borrowed_time");
 					var pipe = i.Modifiers.Any(x => x.Name == "modifier_item_pipe_barrier");
 					
-					
-						if (Dagon.CanBeCasted() && Utils.SleepCheck("dagon") && Utils.SleepCheck("rearm") && !ReArm.IsChanneling)
+					if (Dagon.CanBeCasted() && Utils.SleepCheck("dagon") && Utils.SleepCheck("rearm") && !ReArm.IsChanneling)
 						{
 							if ((linken != null && linken.Cooldown == 0) || (sphere || ta || dazzle || abaddon || pipe))
 								return;
@@ -115,7 +114,6 @@ namespace TinkerMadness
 								Rocket.UseAbility();
 								Utils.Sleep(500 + Game.Ping, "rocket");
 						}
-					
 				}
 			}
 			// Conrol Rearm
@@ -144,7 +142,7 @@ namespace TinkerMadness
 					if (Blink != null && Blink.CanBeCasted() && (me.Distance2D(target) > 500) && Utils.SleepCheck("Blink") && SubMenu.Item("useblink").GetValue<bool>() && !nothingCanCast() && !me.IsChanneling() && !ReArm.IsChanneling && (me.Mana > 200) && Utils.SleepCheck("rearm"))
 					{
 						Blink.UseAbility(target.Position);
-						Utils.Sleep(1000 + Game.Ping, "Blink");
+						Utils.Sleep(750 + Game.Ping, "Blink");
 					}
 					// Items
 					else if (Shiva != null && Shiva.CanBeCasted() && Utils.SleepCheck("shiva") && Utils.SleepCheck("rearm"))
