@@ -72,6 +72,8 @@ namespace ZoomImproved
 						zoomValue -= 50;
 					if (zoomValue < 1134)
 						zoomValue = 1134;
+					if (zoomValue > 2500)
+						zoomValue = 2500;
 					ZoomVar.SetValue(zoomValue);
 					Menu.Item("distance").SetValue(new Slider(zoomValue, 1134, 2500));
 					args.Process = false;
