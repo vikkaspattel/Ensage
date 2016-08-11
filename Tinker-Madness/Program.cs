@@ -29,6 +29,7 @@ namespace TinkerMadness
 			Menu.AddItem(new MenuItem("gorearm", "Smart Ulti Key").SetValue(new KeyBind('R', KeyBindType.Press)).SetTooltip("What is your rearm key in dota 2 settings? use it here"));
 			Menu.AddItem(new MenuItem("note", "Notice: Hotkeys are PressType Keys dont click on ON/OFF"));
 			Menu.AddSubMenu(SubMenu);
+			SubMenu.AddItem(new MenuItem("ignorelaser", "Ignore Laser in Combo").SetValue(false).SetTooltip("Enabling this will ignore Laser use in Combo"));
 			SubMenu.AddItem(new MenuItem("useblink", "Use Blink in Combo").SetValue(true).SetTooltip("Auto use Blink During Madness"));
 			SubMenu.AddItem(new MenuItem("safeglimmer", "Glimmer Travel").SetValue(true).SetTooltip("Auto use Glimmer Cape if Tinker uses boots of Travel"));
 			SubMenu.AddItem(new MenuItem("autoks", "Auto KS").SetValue(true).SetTooltip("Auto use Dagon, Laser or rocket for Kill Steal"));
@@ -184,7 +185,7 @@ namespace TinkerMadness
 						Utils.Sleep(150 + Game.Ping, "rocket");
 						Utils.ChainStun(me, 150 + Game.Ping, null, false);
 					}
-					else if (Laser != null && Laser.CanBeCasted() && Utils.SleepCheck("laser") && Utils.SleepCheck("ethereal") && Utils.SleepCheck("rocket") && Utils.SleepCheck("rearm"))
+					else if (Laser != null && Laser.CanBeCasted() && Utils.SleepCheck("laser") && Utils.SleepCheck("ethereal") && Utils.SleepCheck("rocket") && Utils.SleepCheck("rearm") && !(SubMenu.Item("ignorelaser").GetValue<bool>()))
 					{
 						Laser.UseAbility(target);
 						Utils.Sleep(150 + Game.Ping, "laser");
@@ -205,10 +206,10 @@ namespace TinkerMadness
 		}
 		private static bool nothingCanCast()
 		{
-			if (!Laser.CanBeCasted() && !Rocket.CanBeCasted() && !Ethereal.CanBeCasted() && !Dagon.CanBeCasted() && !Hex.CanBeCasted() && !Shiva.CanBeCasted() && !Veil.CanBeCasted())
+			if ((!Laser.CanBeCasted() && !Rocket.CanBeCasted() && !Ethereal.CanBeCasted() && !Dagon.CanBeCasted() && !Hex.CanBeCasted() && !Shiva.CanBeCasted() && !Veil.CanBeCasted() && !(SubMenu.Item("ignorelaser").GetValue<bool>())) || (Laser.CanBeCasted() && !Rocket.CanBeCasted() && !Ethereal.CanBeCasted() && !Dagon.CanBeCasted() && !Hex.CanBeCasted() && !Shiva.CanBeCasted() && !Veil.CanBeCasted() && (SubMenu.Item("ignorelaser").GetValue<bool>())))
 				return true;
-			else
-				return false;
+			
+				return false;	
 		}
 		private static void Game_OnWndProc(WndEventArgs args)
 		{
